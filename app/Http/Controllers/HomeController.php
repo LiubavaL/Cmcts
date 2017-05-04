@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comic;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegistered;
 use DB;
 use Mailgun\Mailgun;
+
 
 class HomeController extends Controller
 {
@@ -48,8 +51,13 @@ FROM
         return view('home', ['comics' => $comics]);
     }
 
-    public function testEmail(){
-        $mgClient = new Mailgun(env('MAILGUN_SECRET'));
+    public function testEmail(Request $request){
+        $user = $request->user();
+
+        Mail::to($user)->send(new UserRegistered($user, 'http://comicats.herokuapp.com/FAKELINK'));
+
+
+        /*$mgClient = new Mailgun(env('MAILGUN_SECRET'));
         $domain =  env('MAILGUN_DOMAIN');
 
         $result = $mgClient->sendMessage($domain, array(
@@ -59,7 +67,15 @@ FROM
             'text'    => 'Testing some Mailgun awesomness!'
         ));
 
-        var_dump($result);
+        $result = json_decode(json_encode($result), true);
+
+        if($result['http_response_code'] == 200){
+            return view('confirm-email', ['comics' => $comics]);
+        }*/
+
+        /* ОТвет успешная отправки выглядит так
+         * object(stdClass)#327 (2) { ["http_response_body"]=> object(stdClass)#322 (2) { ["id"]=> string(90) "<20170504211057.6837.3096097D299A30EA@sandboxdf4c2203b6b34e879e3061129343a97e.mailgun.org>" ["message"]=> string(18) "Queued. Thank you." } ["http_response_code"]=> int(200) }
+         * */
 
     }
 }
