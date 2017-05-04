@@ -959,7 +959,7 @@ if (! function_exists('get_extension')) {
     function get_extension($fileName)
     {
         $ext = substr($fileName, strrpos($fileName, '.') + 1);
-        return $ext;
+        return $ext;//
     }
 }
 
