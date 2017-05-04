@@ -7,7 +7,6 @@
             {{session('success')}}
         </div>
     @endif
-    {{phpinfo()}}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
@@ -68,6 +67,18 @@
 
                                 <label class="form-check-labexl">Обложка</label>
                                 <input type="file" name="cover" value="{{old('cover')}}"/>
+                            </div>
+
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @include('errors.partial.validation', ['errors'=>$errors, 'name'=>'cover'])
+
+                                <label class="form-check-labexl">Дополнительные изображения</label>
+                                <input type="file" name="cover_slide[]" value="{{old('cover')}}"/>
+                                <input type="file" name="cover_slide[]" value="{{old('cover')}}"/>
+                                <input type="file" name="cover_slide[]" value="{{old('cover')}}"/>
                             </div>
 
                         </div>

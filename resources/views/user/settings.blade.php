@@ -115,7 +115,7 @@
                                                     <div class="form-group">
                                                         @include('errors.partial.validation', ['errors'=>$errors, 'name'=>'cover'])
                                                         <h5>Обложка</h5>
-                                                        <img src="/storage/profile/{{$user->image}}" width="100"
+                                                        <img src="{{get_avatar_path().Auth::user()->image}}" width="100"
                                                              height="auto">
                                                         <input type="file" name="cover" value="{{old('cover')}}"/>
                                                     </div>

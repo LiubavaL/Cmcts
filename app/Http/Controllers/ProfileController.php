@@ -105,15 +105,15 @@ class ProfileController extends Controller
             case 'account':
                 if($username) $user->name = $username;
                 if($image) {
-                    $storage = Storage::disk('public');
+                    $storage = Storage::disk('s3');
                     $imageName = time().'.'.$image->getClientOriginalExtension();
-                    $dirThumb = 'profile/';
-                    $imgThumb = InterventionImage::make($image)
+                    $dirThumb = '/avatars/';
+                    $imgThumb = InterventionImage::make($image)/*
                         ->resize(300, null, function ($constraint) {$constraint->aspectRatio();})
-                        ->crop(300, 300);
+                        ->crop(300, 300)*/;
 
                     $imgThumb = $imgThumb->stream();
-                    $storage->put($dirThumb.$imageName, $imgThumb->__toString());
+                    $storage->put($dirThumb.$imageName, $imgThumb->__toString(), 'public');
 
                     $user->image = $imageName;
                 }

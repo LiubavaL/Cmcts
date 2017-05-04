@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use File;
 use Debugbar;
 use Log;
+use DB;
 
 class ComicController extends Controller
 {
@@ -56,8 +57,11 @@ class ComicController extends Controller
 
         $adultContent = (!empty($request->adult_content)) ? 1 : 0;
 
+        //start transaction
+        DB::beginTransaction();
+
         //create comic instance
-        $comic = new Comic;
+        /*$comic = new Comic;
         $comic->user_id = Auth::id();
         $comic->title = $request->title;
         $comic->description = $request->description;
@@ -65,7 +69,16 @@ class ComicController extends Controller
         $comic->status_id = $request->comic_status;
         $comic->adult_content = $adultContent;
 
-        $comic->save();
+        $comic->save();*/
+
+        $comic = Comic::create([
+            'user_id' => Auth::id(),
+            'title' => $request->title,
+            'description' => $request->description,
+            'cover' => $imageName,
+            'status_id' => $request->comic_status,
+            'adult_content' => $adultContent
+        ]);
 
         //handle genres
         $selectedGenresId = $request->input('genres');
@@ -94,7 +107,7 @@ class ComicController extends Controller
 
                 $uploadedZipImages = $request->file('volume.' . $volumeKey . '.chapter.' . $chapterKey . '.chapter_images');
 
-                if ($uploadedZipImages != null) {
+                if ($uploadedZipImages != null) {//проверка необязательна здесь, так как клиентская и серверная валидации пройдены
                     /*
                     **ПРОВЕРКА
                         Экзотический формат архива, -- form request
@@ -145,7 +158,12 @@ class ComicController extends Controller
                     $zipper->close();
                     **/
 
-                    $resetedImages = $comicService->storeArchiveData($uploadedZipImages);
+                    try {
+                        $resetedImages = $comicService->storeArchiveData($uploadedZipImages);
+                    } catch (\Exception $e) {//ошибка открытия файла
+                        DB::rollback();
+                        throw $e;
+                    }
 
                     $imageSequence = 1;
                     $newImages = array();
@@ -164,6 +182,9 @@ class ComicController extends Controller
                 }
             }
         }
+
+        //commit new records
+        DB::commit();
 
         return redirect('/comic/'.$comic->slug)->with('success','Комикс успешно создан.');
     }
@@ -239,7 +260,7 @@ class ComicController extends Controller
         //извлекаем из дерева Collection изображения выбранной главы
         $volumes = $comic->volumes;
 
-        dd($comic->toArray());
+        //dd($comic->toArray());
 
         //извлекаем из дерева Collection изображения выбранной главы
         $chapters = $volumes->where('sequence', $volumeSequence)->first()

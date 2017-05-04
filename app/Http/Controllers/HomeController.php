@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Comic;
 use DB;
+use Mailgun\Mailgun;
 
 class HomeController extends Controller
 {
@@ -45,5 +46,20 @@ FROM
         //dd($comics);
 
         return view('home', ['comics' => $comics]);
+    }
+
+    public function testEmail(){
+        $mgClient = new Mailgun(env('MAILGUN_SECRET'));
+        $domain =  env('MAILGUN_DOMAIN');
+
+        $result = $mgClient->sendMessage($domain, array(
+            'from'    => 'Comicats '.env('MAIL_FROM'),
+            'to'      => 'luviiilove@gmail.com',
+            'subject' => 'Hello',
+            'text'    => 'Testing some Mailgun awesomness!'
+        ));
+
+        var_dump($result);
+
     }
 }

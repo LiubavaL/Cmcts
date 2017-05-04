@@ -48,6 +48,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     //add comments
     Route::post('/comment/add', 'CommentController@add');
+
+    //test email
+    Route::get('/email', 'HomeController@testEmail');
 });
 
 //comic routes

@@ -1,5 +1,6 @@
 <div class="card">
     <div class="card-header p-b-0">
+        <img src="{{get_avatar_path().$comment->user->image}}">
         <h5 class="card-title"> {{$comment->user->name}}</h5>
     </div>
 

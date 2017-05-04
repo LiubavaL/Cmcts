@@ -45,6 +45,7 @@ class UploadComicRequest extends FormRequest
             'title' => 'required',
             'description' => 'required',
             //'cover' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'cover_slide' => 'image|mimes:jpeg,png,jpg|max:2048',
             'genres' => 'required',
             'volume' => 'required',
             //'volume.*.chapter' => 'required',

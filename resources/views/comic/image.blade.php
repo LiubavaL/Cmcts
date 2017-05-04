@@ -40,7 +40,7 @@
         </div>
         @forelse ($chapterImages as $image)
             @if ($image->sequence == $imageSequence)
-                <img src="/images/test/{{$image->name}}" width="100%" height="auto"/>
+                <img src="{{get_comicpage_path($image->name).$image->name}}" width="100%" height="auto"/>
 
                 @forelse($image->image_comments as $comment)
                     @include('comic.partial.image_comment', ['comment'=>$comment])

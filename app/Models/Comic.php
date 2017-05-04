@@ -10,10 +10,12 @@ class Comic extends Model
     use Sluggable;
 
     protected $fillable = [
+        'user_id',
         'title',
         'description',
         'cover',
-        'adult_content'
+        'adult_content',
+        'status_id'
     ];
 
     /**

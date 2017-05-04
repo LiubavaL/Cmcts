@@ -74,13 +74,14 @@
                         <li><a href="{{url('comic/create')}}">Загрузить</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    <img class="img-circle" src="/storage/profile/{{Auth::user()->image}}" alt="{{ Auth::user()->name }}" width="25" height="25">
+                                    <img class="img-circle" src="{{get_avatar_path().Auth::user()->image}}" alt="{{ Auth::user()->name }}" width="25" height="25">
                                     {{ Auth::user()->name }}
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
                                         {{--<a href="{{url('/feed')}}">Уведомления</a>--}}
+                                        <a href="{{url('/email')}}">Send test email</a>
                                         <a href="{{url('/profile')}}">Профиль</a>
                                         <a href="{{url('/settings/general')}}">Настройки</a>
                                         <a href="{{ url('/logout') }}"

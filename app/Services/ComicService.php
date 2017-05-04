@@ -21,8 +21,8 @@ class ComicService {
         $ext = $uploadedZipImages->getClientOriginalExtension();
         $archiveName = str_replace('.' . $ext, '', $fullName);
         $path = public_path() . '/images/test/';
-        $zipper = new Zipper;
 
+        $zipper = new Zipper;
 
         try {
 
@@ -45,20 +45,20 @@ class ComicService {
 
             $imageNames = $zipper->listFiles('/\.jpg|\.png|\.gif$/i');
             usort($imageNames, 'strnatcasecmp');
-            var_dump($imageNames);
+            //var_dump($imageNames);
 
             //проверяем, в корне ли изображения, либо же в папке
             $zipperFolder = (dirname($imageNames[0]) == $archiveName) ? $archiveName : '';
-            echo 'zipperFolder = ' . $zipperFolder;
+            //echo 'zipperFolder = ' . $zipperFolder;
             $actualFolder = (!empty($zipperFolder)) ? $zipperFolder . '/' : '';
 
             //$resetedImages = [];
             $resetedImages = $zipper->resetImageNames($actualFolder, $imageNames);
-            echo 'reseted images';
-            var_dump($resetedImages);
+            //echo 'reseted images';
+            //var_dump($resetedImages);
 
-            echo 'reseted listFiles';
-            var_dump($zipper->listFiles());
+            //echo 'reseted listFiles';
+            //var_dump($zipper->listFiles());
             //проверка: если resetedImages пустое, то ошибка и редирект
             $zipper->close();
 
