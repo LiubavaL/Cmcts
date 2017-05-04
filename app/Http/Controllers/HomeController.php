@@ -53,7 +53,7 @@ FROM
         $domain =  env('MAILGUN_DOMAIN');
 
         $result = $mgClient->sendMessage($domain, array(
-            'from'    => 'Comicats '.env('MAIL_FROM'),
+            'from'    => env('MAIL_FROM'),
             'to'      => 'luviiilove@gmail.com',
             'subject' => 'Hello',
             'text'    => 'Testing some Mailgun awesomness!'
