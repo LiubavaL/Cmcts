@@ -32,9 +32,8 @@ class UserRegistered extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, $link)
+    public function __construct($link)
     {
-        $this->user = $user;
         $this->link = $link;
     }
 

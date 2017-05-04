@@ -52,9 +52,8 @@ FROM
     }
 
     public function testEmail(Request $request){
-        $user = $request->user();
 
-        Mail::to($user)->send(new UserRegistered($user, 'http://comicats.herokuapp.com/FAKELINK'));
+        Mail::to($request->user())->send(new UserRegistered('http://comicats.herokuapp.com/FAKELINK'));
 
 
         /*$mgClient = new Mailgun(env('MAILGUN_SECRET'));
