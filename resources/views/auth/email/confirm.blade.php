@@ -44,7 +44,7 @@
                                                 Comicats is the place for comic artists.
                                             </p>
                                             <p style="margin:20px 0">
-                                                To learn more about Comicats and all its features, check out <a href="https://comicats.heroku.com/about" style="color:#666666" target="_blank">our Guide</a>.
+                                                To learn more about Comicats and all its features, check out <a href="https://comicats.heroku.com/about" style="color:#666666" target="_blank">our guide</a>.
                                             </p>
                                         </td>
                                     </tr>

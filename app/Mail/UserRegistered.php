@@ -44,6 +44,6 @@ class UserRegistered extends Mailable
      */
     public function build()
     {
-        return $this->subject('Confirm your account on Comicats')->view('auth.email.confirm');
+        return $this->from('Comicats')->subject('Confirm your account on Comicats')->view('auth.email.confirm');
     }
 }
