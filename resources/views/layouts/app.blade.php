@@ -81,7 +81,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
                                         {{--<a href="{{url('/feed')}}">Уведомления</a>--}}
-                                        <a href="{{url('/email')}}">Send test email</a>
+                                        <a href="{{url('/activate')}}">Activate account</a>
                                         <a href="{{url('/profile')}}">Профиль</a>
                                         <a href="{{url('/settings/general')}}">Настройки</a>
                                         <a href="{{ url('/logout') }}"

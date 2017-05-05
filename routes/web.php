@@ -49,8 +49,9 @@ Route::group(['middleware' => ['auth']], function () {
     //add comments
     Route::post('/comment/add', 'CommentController@add');
 
-    //test email
-    Route::get('/email', 'HomeController@testEmail');
+    //user activation
+    Route::get('/activate/{token}', 'RegisterController@activateUser');
+    Route::get('/activate', 'RegisterController@sendActivationLink');
 });
 
 //comic routes

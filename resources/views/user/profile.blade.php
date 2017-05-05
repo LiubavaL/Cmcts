@@ -2,6 +2,19 @@
 
 @section('content')
     <div class="container">
+        @if(isset(session('activated')) && session('activated') == true)
+            <div class="alert alert-success alert-block">
+                Ваш профиль успешно активирован!
+            </div>
+        @elseif(!empty($user->is_verified))
+            <div class="alert alert-danger alert-block">
+                Ваш аккаунт уже активирован.
+            </div>
+        @elseif
+            <div class="alert alert-danger alert-block">
+                Не удалось активировать аккаунт! Попробуйте повторно отправить письмо с подтверждением.
+            </div>
+        @endif
         <div class="row">
             <div class="col-sm-4">
                 <div class="card">

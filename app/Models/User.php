@@ -23,6 +23,7 @@ class User extends Authenticatable
         'city',
         'country_id',
         'show_adult',
+        'is_verified'
     ];
 
     /**

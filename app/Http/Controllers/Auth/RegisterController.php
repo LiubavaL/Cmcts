@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\Role;
 use Validator;
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -61,7 +62,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
+    protected function create(Request $request, array $data)
     {
         $user = User::create([
             'name' => $data['name'],
@@ -69,9 +70,61 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
 
-        $userRole = Role::whereName('user')->first();
-        $user->assignRole($userRole);
+        if($user){
+            $userRole = Role::whereName('user')->first();
+            $user->assignRole($userRole);
 
-        return $user;
+            $this->sendActivationLink($request, $user);
+
+            return $user;
+        }else new \Exception("Failed to create user");
+    }
+
+    public function sendActivationLink(Request $request, $user = null){
+        if(empty($user)){
+            $user = Auth::user();
+        }
+
+        $activationLink = $this->addActivation($user);
+
+        Mail::to($request->user())->send(new UserRegistered($activationLink));
+    }
+
+    public function activateUser(Request $request){
+        $token = $request->route('token');
+        $resultMessage = false;
+
+        $confirmation = $this->getActivation($token);
+
+        $user = User::find('email', $confirmation->email);
+        $user->is_verified = true;
+        $user->save();
+
+        if($user){
+            $this->removeActivation($confirmation);
+            $resultMessage = true;
+
+        }
+        return view('user.profile', ['activated' => $resultMessage]);
+    }
+
+    private function addActivation($user){
+        $confirmation = new ConfirmUsers;
+
+        $confirmation->token = str_random(32);
+        $confirmation->email = $user->email;
+        $confirmation->save();
+
+        $activationLink = 'http://comicats.herokuapp.com/activate/'.$confirmation->token;
+
+        return $activationLink;
+    }
+
+    private function getActivation($token){
+        return ConfirmUsers::find('token', $token);
+    }
+
+    private function removeActivation($confirmation){
+        $confirmation->delete();
     }
 }
