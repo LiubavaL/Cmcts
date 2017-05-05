@@ -6,8 +6,11 @@ use App\Models\User;
 use App\Models\Role;
 use Validator;
 use Auth;
+use App\Models\ConfirmUsers;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegistered;
 
 class RegisterController extends Controller
 {
