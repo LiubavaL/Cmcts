@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Role;
 use Validator;
 use Auth;
+use Illuminate\Http\Request;
 use App\Models\ConfirmUsers;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
