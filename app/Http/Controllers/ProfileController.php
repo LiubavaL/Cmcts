@@ -15,6 +15,8 @@ use App\Models\Country;
 use Auth;
 use Debugbar;
 use Validator;
+use Event;
+use App\Events\UserSignedUp;
 
 class ProfileController extends Controller
 {
@@ -207,5 +209,9 @@ class ProfileController extends Controller
         $bag->add($name, $message);
 
         return $bag;
+    }
+
+    public function sendActivationLink(Request $request){
+        Event::fire(new UserSignedUp($request->user()));
     }
 }

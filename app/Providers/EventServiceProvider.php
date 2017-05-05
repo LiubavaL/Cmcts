@@ -13,9 +13,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\UpdateAccountSettings' => [
-            'App\Listeners\UpdateSettingsListener@account',
-        ],
+        'App\Events\UserSignedUp' => [
+            'App\Listeners\SendConfirmationEmail'],
+        'App\Events\UserTryActivate' => [
+            'App\Listeners\ActivateUser'],
     ];
 
     /**

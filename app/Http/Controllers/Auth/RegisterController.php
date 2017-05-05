@@ -5,13 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\Role;
 use Validator;
-use Auth;
-use Illuminate\Http\Request;
-use App\Models\ConfirmUsers;
+use Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\UserRegistered;
+use App\Events\UserSignedUp;
+use Event;
+
 
 class RegisterController extends Controller
 {
@@ -33,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    //protected $redirectTo = '/profile';
 
     /**
      * Create a new controller instance.
@@ -78,7 +77,9 @@ class RegisterController extends Controller
             $userRole = Role::whereName('user')->first();
             $user->assignRole($userRole);
 
-            $this->sendActivationLink($request, $user);
+            Event::fire(new UserSignedUp());
+
+            //$this->sendActivationLink($request, $user);
 
             return $user;
         }else new \Exception("Failed to create user");
@@ -92,6 +93,8 @@ class RegisterController extends Controller
         $activationLink = $this->addActivation($user);
 
         Mail::to($request->user())->send(new UserRegistered($activationLink));
+
+        return view('user.profile', ['activationMailSent' => true]);
     }
 
     public function activateUser(Request $request){

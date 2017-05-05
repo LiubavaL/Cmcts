@@ -2,6 +2,11 @@
 
 @section('content')
     <div class="container">
+        @if(isset(session('activationMailSent')))
+            <div class="alert alert-success alert-block">
+                Письмо с подтверждением было выслано на почту.
+            </div>
+        @endif
         @if(isset(session('activated')) && session('activated') == true)
             <div class="alert alert-success alert-block">
                 Ваш профиль успешно активирован!
