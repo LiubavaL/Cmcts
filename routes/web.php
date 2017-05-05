@@ -50,8 +50,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/comment/add', 'CommentController@add');
 
     //user activation
-    Route::get('/activate/{token}', 'Auth/RegisterController@activateUser');
-    Route::get('/activate', 'Auth/RegisterController@sendActivationLink');
+    Route::get('/activate/{token}', 'Auth\RegisterController@activateUser');
+    Route::get('/activate', 'Auth\RegisterController@sendActivationLink');
 });
 
 //comic routes
