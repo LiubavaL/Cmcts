@@ -32,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    //protected $redirectTo = '/profile';
+    protected $redirectTo = '/profile';
 
     /**
      * Create a new controller instance.
@@ -79,7 +79,7 @@ class RegisterController extends Controller
 
             Event::fire(new UserSignedUp());
 
-            //$this->sendActivationLink($request, $user);
+            $request->session()->flash('activationMailSent', true);
 
             return $user;
         }else new \Exception("Failed to create user");

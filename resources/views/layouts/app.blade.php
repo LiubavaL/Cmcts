@@ -24,6 +24,7 @@
     </script>
 </head>
 <body>
+<img src="{{public_path()."/images/logo.png"}}" alt="heroku"/>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">

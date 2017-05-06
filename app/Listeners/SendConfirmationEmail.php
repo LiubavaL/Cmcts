@@ -38,7 +38,7 @@ class SendConfirmationEmail
 
         Mail::to($user)->send(new UserRegistered($activationLink));
 
-        //return view('user.profile', ['activationMailSent' => true]);
+        return view('user.profile', ['activationMailSent' => true]);
     }
 
 
