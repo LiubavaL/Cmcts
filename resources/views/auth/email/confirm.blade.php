@@ -15,7 +15,7 @@
                                     <tbody>
                                         <tr style="vertical-align:top;padding:0">
                                             <td style="vertical-align:top;text-align:left;padding:0" align="left" valign="top">
-                                                <h1 style="color:#f60066;display:block;font-family:hybrea,proxima-nova,'helvetica neue',helvetica,arial,geneva,sans-serif;font-size:32px;font-weight:200;text-align:left;margin:0 0 40px" align="left"><img src="https://comicats.heroku.com/images/logo.png" alt="heroku" width="120" height="42" style="outline:none;text-decoration:none;border:0"></h1>
+                                                <h1 style="color:#f60066;display:block;font-family:hybrea,proxima-nova,'helvetica neue',helvetica,arial,geneva,sans-serif;font-size:32px;font-weight:200;text-align:left;margin:0 0 40px" align="left"><img src="http://comicats.heroku.com/images/logo.png" alt="heroku" width="120" height="42" style="outline:none;text-decoration:none;border:0"></h1>
 
                                                 <p style="margin:20px 0">Thanks for signing up with Comicats! Follow this link to activate your account:</p>
 
