@@ -242,7 +242,7 @@ class ProfileController extends Controller
     }
 
     private function getActivation($token){
-        return ConfirmUsers::find('token', $token);
+        return ConfirmUsers::where('token', $token)->first();
     }
 
     private function removeActivation($confirmation){
