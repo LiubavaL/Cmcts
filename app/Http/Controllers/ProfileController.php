@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Comic;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\ConfirmUsers;
 use Auth;
 use Debugbar;
 use Validator;
@@ -211,6 +212,11 @@ class ProfileController extends Controller
         return $bag;
     }
 
+    /*
+     *
+     * User Account Activation
+     *
+     * */
     public function sendActivationLink(Request $request){
         Event::fire(new UserSignedUp($request->user()));
 
