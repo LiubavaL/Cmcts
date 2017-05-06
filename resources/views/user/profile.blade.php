@@ -2,12 +2,11 @@
 
 @section('content')
     <div class="container">
-        @if(isset(session('activationMailSent')))
+        @if(session('activationMailSent'))
             <div class="alert alert-success alert-block">
-                Письмо с подтверждением было выслано на почту.
+                Письмо с подтверждением было выслано на почту {{$user->email}}.
             </div>
-        @endif
-        @if(isset(session('activated')) && session('activated') == true)
+        @elseif(session('activated') == true)
             <div class="alert alert-success alert-block">
                 Ваш профиль успешно активирован!
             </div>
@@ -15,7 +14,7 @@
             <div class="alert alert-danger alert-block">
                 Ваш аккаунт уже активирован.
             </div>
-        @elseif
+        @else
             <div class="alert alert-danger alert-block">
                 Не удалось активировать аккаунт! Попробуйте повторно отправить письмо с подтверждением.
             </div>

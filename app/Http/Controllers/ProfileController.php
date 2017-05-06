@@ -220,29 +220,34 @@ class ProfileController extends Controller
     public function sendActivationLink(Request $request){
         Event::fire(new UserSignedUp($request->user()));
 
-        return view('user.profile', ['activationMailSent' => true]);
+        return redirect('/profile')->with('activationMailSent', true);
     }
 
     public function activateUser(Request $request){
-        $token = $request->input('token');
-        $resultMessage = false;
+        $token = $request->route('token');
+        $activated = false;
 
         $confirmation = $this->getActivation($token);
 
-        $user = User::find('email', $confirmation->email);
-        $user->is_verified = true;
-        $user->save();
 
-        if($user){
-            $this->removeActivation($confirmation);
-            $resultMessage = true;
+        if($confirmation){
+            $user = User::where('email', $confirmation->email)->first();
+            $user->is_verified = true;
+            $user->save();
 
+            if($user){
+                $this->removeActivation($confirmation);
+                $activated = true;
+
+            }
         }
-        return view('user.profile', ['activated' => $resultMessage]);
+
+        return redirect('/profile')->with('activated', $activated);
     }
 
     private function getActivation($token){
-        return ConfirmUsers::where('token', $token)->first();
+        $confirmUser = ConfirmUsers::where('token', $token)->first();
+        return $confirmUser;
     }
 
     private function removeActivation($confirmation){

@@ -11,6 +11,7 @@ class ConfirmUsers extends Model
      *
      * @var array
      */
+
     protected $fillable = [
         'email',
         'token'
