@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\ConfirmUsers;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        //delete expired confirmation tokens
+         $schedule->call(function (){
+            ConfirmUsers::where('updated_at', '<', date('Y-m-d H:i:s', strtotime('-1 hours')))->delete();
+         })->everyMinute();
     }
 
     /**

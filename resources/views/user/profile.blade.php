@@ -6,17 +6,17 @@
             <div class="alert alert-success alert-block">
                 Письмо с подтверждением было выслано на почту {{$user->email}}.
             </div>
-        @elseif(session('activated') == true)
+        @elseif(session('activated') === true)
             <div class="alert alert-success alert-block">
                 Ваш профиль успешно активирован!
             </div>
-        @elseif(!empty($user->is_verified))
+        @elseif(session('activated') === false)
             <div class="alert alert-danger alert-block">
-                Ваш аккаунт уже активирован.
-            </div>
-        @else
-            <div class="alert alert-danger alert-block">
-                Не удалось активировать аккаунт! Попробуйте повторно отправить письмо с подтверждением.
+                @if(!empty($user->is_verified))
+                    Не удалось активировать аккаунт, код активации недействителен. Попробуйте <a href="/activate">повторить</a> активацию.
+                @else
+                    Ваш аккаунт уже активирован.
+                @endif
             </div>
         @endif
         <div class="row">

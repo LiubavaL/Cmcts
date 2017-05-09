@@ -33,22 +33,33 @@ class SendConfirmationEmail
     }
 
     public function sendConfirmationEmail($user){
+        if($user->is_verified == 0){
+            $activationLink = $this->addConfirmation($user);
 
-        $activationLink = $this->addConfirmation($user);
+            Mail::to($user)->send(new UserRegistered($activationLink));
+        }
 
-        Mail::to($user)->send(new UserRegistered($activationLink));
-
-        return view('user.profile', ['activationMailSent' => true]);
+        //return view('user.profile', ['activationMailSent' => true]);
     }
 
 
 
     private function addConfirmation($user){
-        $confirmation = new ConfirmUsers;
+        $oldToken = ConfirmUsers::where('email', $user->email)->first();
+        $token = str_random(32);
 
-        $confirmation->token = str_random(32);
-        $confirmation->email = $user->email;
-        $confirmation->save();
+        if($oldToken == null){//ранее токен не высылался, либо пользователь уже подтвержден - добавляем
+            $confirmation = new ConfirmUsers;
+
+            $confirmation->token = $token;
+            $confirmation->email = $user->email;
+            $confirmation->save();
+        }else{//обновляем токен, если он существует в базе
+            $oldToken->token = $token;
+            $oldToken->touch();
+        }
+
+
 
         $confirmationLink = 'http://comicats.herokuapp.com/activate/'.$confirmation->token;
 

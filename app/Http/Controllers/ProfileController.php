@@ -226,7 +226,6 @@ class ProfileController extends Controller
     public function activateUser(Request $request){
         $token = $request->route('token');
         $activated = false;
-
         $confirmation = $this->getActivation($token);
 
 
@@ -238,7 +237,6 @@ class ProfileController extends Controller
             if($user){
                 $this->removeActivation($confirmation);
                 $activated = true;
-
             }
         }
 
