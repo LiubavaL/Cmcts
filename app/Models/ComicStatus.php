@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class ComicStatus extends Model
+class ComicStatus extends BaseModel
 {
     protected $fillable = [
         'title',

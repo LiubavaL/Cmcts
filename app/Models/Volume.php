@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Volume extends Model
+class Volume extends BaseModel
 {
 	protected $fillable = [
         'comic_id',

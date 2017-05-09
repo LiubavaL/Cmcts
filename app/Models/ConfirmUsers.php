@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class ConfirmUsers extends Model
+class ConfirmUsers extends BaseModel
 {
     /**
      * The attributes that are mass assignable.
