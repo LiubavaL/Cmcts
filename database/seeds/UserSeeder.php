@@ -19,10 +19,10 @@ class UserSeeder extends Seeder
         $this->createUser('LuviiiLove', 'luviiilove@gmail.com', 'Elhieloelhielo', 'admin');
         $this->createUser('test', 'test@gmail.com', 'test');
 
-        $faker = Faker::create('ru_RU');
+       /* $faker = Faker::create('ru_RU');
         foreach (range(1,10) as $index) {
             $this->createUser($faker->name, $faker->email, 'secret');
-        }
+        }*/
     }
 
     private function createUser($name, $email, $password, $role = 'user'){
