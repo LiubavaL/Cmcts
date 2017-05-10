@@ -172,6 +172,7 @@ return [
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
+        Spatie\Analytics\AnalyticsServiceProvider::class,
 
         //
 
@@ -197,7 +198,7 @@ return [
     */
 
     'aliases' => [
-
+        'Analytics' => Spatie\Analytics\AnalyticsFacade::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,

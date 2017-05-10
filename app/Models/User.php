@@ -35,9 +35,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function posts()
+    public function comics()
     {
-        return $this->hasMany('App\Models\Post');
+        return $this->hasMany('App\Models\Comic');
     }
 
     //comic likes

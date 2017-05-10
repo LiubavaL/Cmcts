@@ -16,7 +16,8 @@
         "dmamontov/rararchiver": "~1.0.0",
         "cviebrock/eloquent-sluggable": "^4.0",
         "mailgun/mailgun-php": "^2.3",
-        "php-http/curl-client": "^1.7"
+        "php-http/curl-client": "^1.7",
+        "spatie/laravel-analytics": "2.4.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -50,8 +50,9 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <!-- Search form -->
-                        <form class="form-inline my-2 my-lg-0">
-                          <input class="form-control mr-sm-2" type="text" placeholder="Поиск">
+                        <form method="POST" class="form-inline my-2 my-lg-0" action="/search">
+                            {{ csrf_field() }}
+                          <input class="form-control mr-sm-2" type="text" placeholder="Поиск" name="keyword">
                           <button class="btn btn-primary my-2 my-sm-0" type="submit">Поиск</button>
                         </form>
                     </ul>
@@ -107,5 +108,15 @@
     </div>
     <!-- Scripts -->
     <script src="/js/app.js"></script>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-98862533-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
 </body>
 </html>

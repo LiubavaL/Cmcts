@@ -13,6 +13,8 @@ use App\Models\ComicStatus;
 use App\Models\Genre;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Analytics\Period;
+use Analytics;
 use File;
 use Debugbar;
 use Log;
@@ -204,6 +206,8 @@ class ComicController extends Controller
     public function showComic(Request $request)
     {
         $comicSlug = $request->route('slug');
+        $analyticsData = Analytics::fetchPageviewsForUrl(Period::days(7), '/comic/'.$comicSlug);
+        dd($analyticsData->toArray());
 
         //eager loading -> ('volumes.chapters')
         $comic = Comic::with('volumes.chapters')->where('slug', $comicSlug)->first();
