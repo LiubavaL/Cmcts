@@ -56,7 +56,7 @@
                                         {{ $comic->title }}
                                     </a>
                                 </h5>
-                                <img src="{{'/images/'.$comic->cover}}" width="300" height="auto"/>
+                                <img src="{{get_s3_path($comic->cover).$comic->cover}}" width="300" height="auto"/>
                                 <span class="badge badge-default badge-pill">{{ $comic->status->title }}</span>
                             </li>
                         @endforeach

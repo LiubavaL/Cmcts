@@ -18,6 +18,8 @@ use Debugbar;
 use Validator;
 use Event;
 use App\Events\UserSignedUp;
+use Spatie\Analytics\Period;
+use Analytics;
 
 class ProfileController extends Controller
 {
@@ -38,6 +40,8 @@ class ProfileController extends Controller
      */
     public function getProfile(Request $request)
     {
+        $analyticsData = Analytics::fetchPageviewsForUrl(Period::days(7), '/profile');
+        //dd($analyticsData->toArray());
         $userId = $request->route('id');
         $user = null;
         $authUser = Auth::user();

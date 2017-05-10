@@ -19,6 +19,7 @@ use File;
 use Debugbar;
 use Log;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 class ComicController extends Controller
 {
@@ -54,8 +55,13 @@ class ComicController extends Controller
     public function postUpload(UploadComicRequest $request, ComicService $comicService)
     {
         //handle cover image upload
+        $s3 = Storage::disk('s3');
         $imageName = time() . '.' . $request->cover->getClientOriginalExtension();
-        $request->cover->move(public_path('images'), $imageName);
+        if($request->cover){
+            $s3->put(get_s3_path($imageName).$imageName, $request->cover, 'public');
+        }else{
+           // throw new ExtractFileException('Can\'t read file');
+        }
 
         $adultContent = (!empty($request->adult_content)) ? 1 : 0;
 
@@ -207,7 +213,7 @@ class ComicController extends Controller
     {
         $comicSlug = $request->route('slug');
         $analyticsData = Analytics::fetchPageviewsForUrl(Period::days(7), '/comic/'.$comicSlug);
-        dd($analyticsData->toArray());
+        //dd($analyticsData->toArray());
 
         //eager loading -> ('volumes.chapters')
         $comic = Comic::with('volumes.chapters')->where('slug', $comicSlug)->first();

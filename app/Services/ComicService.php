@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use Chumper\Zipper\Zipper;
+use App\Models\Zip\Zip;
 use App\Exceptions\ExtractFileException;
 use App\Exceptions\OpenFileException;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +22,7 @@ class ComicService {
         $archiveName = str_replace('.' . $ext, '', $fullName);
         $path = public_path() . '/images/test/';
 
-        $zipper = new Zipper;
+        $zipper = new Zip;
 
         try {
 
@@ -66,7 +66,7 @@ class ComicService {
             $zipper->make($uploadedZipImages, 'zip');
 
             //throw new ReadFileException('cant read zip');
-            $zipper->folder($zipperFolder)->extractTo($path, $resetedImages, Zipper::WHITELIST);
+            $zipper->folder($zipperFolder)->extractTo($path, $resetedImages, Zip::WHITELIST);
 
             } catch (ExtractFileException $e) {//ошибка чтения файла при распаковке
                 $zipper->close();
