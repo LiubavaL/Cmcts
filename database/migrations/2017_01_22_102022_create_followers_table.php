@@ -31,10 +31,8 @@ class CreateFollowersTable extends Migration
      */
     public function down()
     {
-        Schema::table('followers', function (Blueprint $table) {
-            Schema::disableForeignKeyConstraints();
-            Schema::dropIfExists('followers');
-            Schema::enableForeignKeyConstraints();
-        });
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('followers');
+        Schema::enableForeignKeyConstraints();
     }
 }

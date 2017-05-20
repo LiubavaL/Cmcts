@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLikesTable extends Migration
+class CreateComicCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateLikesTable extends Migration
      */
     public function up()
     {
-        Schema::create('likes', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        Schema::create('comic_comments', function (Blueprint $table) {
+            $table->increments('id');
+
             $table->integer('comic_id')->unsigned();
             $table->foreign('comic_id')->references('id')->on('comics')->onDelete('cascade');
-            $table->primary(['user_id', 'comic_id']);
-            
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('content');
+
             $table->timestamps();
         });
     }
@@ -31,10 +33,8 @@ class CreateLikesTable extends Migration
      */
     public function down()
     {
-        Schema::table('likes', function (Blueprint $table) {
-            Schema::disableForeignKeyConstraints();
-            Schema::dropIfExists('likes');
-            Schema::enableForeignKeyConstraints();
-        });
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('comic_comments');
+        Schema::enableForeignKeyConstraints();
     }
 }

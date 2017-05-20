@@ -1,10 +1,11 @@
+
 <?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateImageComments extends Migration
+class CreateLikeTypeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +14,9 @@ class CreateImageComments extends Migration
      */
     public function up()
     {
-        Schema::create('image-comments', function (Blueprint $table) {
+        Schema::create('like_type', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->integer('image_id')->unsigned();
-            $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('content');
-
+            $table->text('name');
             $table->timestamps();
         });
     }
@@ -34,7 +29,7 @@ class CreateImageComments extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('image-comments');
+        Schema::dropIfExists('like_type');
         Schema::enableForeignKeyConstraints();
     }
 }

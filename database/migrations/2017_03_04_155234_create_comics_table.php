@@ -25,6 +25,7 @@ class CreateComicsTable extends Migration
             $table->integer('status_id')->unsigned();
             $table->foreign('status_id')->references('id')->on('comic_statuses')->onDelete('cascade');
             $table->boolean('adult_content');
+            $table->integer('rating');
             $table->integer('view_count')->default(0)->unsigned();
 
             $table->timestamps();
@@ -38,10 +39,8 @@ class CreateComicsTable extends Migration
      */
     public function down()
     {
-        Schema::table('comics', function (Blueprint $table) {
-            Schema::disableForeignKeyConstraints();
-            Schema::dropIfExists('comics');
-            Schema::enableForeignKeyConstraints();
-        });
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('comics');
+        Schema::enableForeignKeyConstraints();
     }
 }

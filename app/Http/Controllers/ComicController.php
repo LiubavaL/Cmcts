@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Notifications\NewComicReaction;
 use Illuminate\Http\Request;
 use App\Http\Requests\UploadComicRequest;
 use App\Services\ComicService;
@@ -31,6 +32,8 @@ class ComicController extends Controller
         $user = Auth::user();
 
         $user->like($comic->id);
+
+        $user->notify(new NewComicReaction($user, $comic));
 
         return redirect()->back();
     }

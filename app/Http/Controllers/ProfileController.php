@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\NewFollower;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateSettingsRequest;
 use App\Http\Requests\BlockUserRequest;
@@ -57,6 +58,7 @@ class ProfileController extends Controller
         $comics = Comic::with('status')->where('user_id', $user->id)->get();
         //$comics = Comic::with('volumes.chapters.images')->where('user_id', Auth::id())->get();
 
+        $notifications = array();
         //dd($user->toArray());
         return view('user.profile', [
             'user' => $user,
@@ -190,6 +192,10 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $user->follow($userId);
+
+        //notify user about new follower
+        $followed = User::where('id', $userId)->first();
+        $followed->notify(new NewFollower($user));
 
         return redirect()->back();
     }
