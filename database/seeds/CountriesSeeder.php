@@ -16,927 +16,955 @@ class CountriesSeeder extends Seeder
         DB::table('countries')->delete();
 
         $country = Country::create([
-            'name' => 'Азербайджан',
+            'name' => 'Afghanistan',
         ]);
 
         $country = Country::create([
-            'name' => 'Армения',
+            'name' => 'Albania',
         ]);
 
         $country = Country::create([
-            'name' => 'Афганистан',
+            'name' => 'Algeria',
         ]);
 
         $country = Country::create([
-            'name' => 'Бангладеш',
+            'name' => 'American Samoa',
         ]);
 
         $country = Country::create([
-            'name' => 'Бахрейн',
+            'name' => 'Andorra',
         ]);
 
         $country = Country::create([
-            'name' => 'Бруней',
+            'name' => 'Angola',
         ]);
 
         $country = Country::create([
-            'name' => 'Бутан',
+            'name' => 'Anguilla',
         ]);
 
         $country = Country::create([
-            'name' => 'Восточный Тимор',
+            'name' => 'Antarctica',
         ]);
 
         $country = Country::create([
-            'name' => 'Вьетнам',
+            'name' => 'Antigua and Barbuda',
         ]);
 
         $country = Country::create([
-            'name' => 'Грузия',
+            'name' => 'Argentina',
         ]);
 
         $country = Country::create([
-            'name' => 'Израиль',
+            'name' => 'Armenia',
         ]);
 
         $country = Country::create([
-            'name' => 'Индия',
+            'name' => 'Aruba',
         ]);
 
         $country = Country::create([
-            'name' => 'Индонезия',
+            'name' => 'Australia',
         ]);
 
         $country = Country::create([
-            'name' => 'Иордания',
+            'name' => 'Austria',
         ]);
 
         $country = Country::create([
-            'name' => 'Ирак',
+            'name' => 'Azerbaijan',
         ]);
 
         $country = Country::create([
-            'name' => 'Иран',
+            'name' => 'Bahamas',
         ]);
 
         $country = Country::create([
-            'name' => 'Йемен',
+            'name' => 'Bahrain',
         ]);
 
         $country = Country::create([
-            'name' => 'Казахстан',
+            'name' => 'Bangladesh',
         ]);
 
         $country = Country::create([
-            'name' => 'Узбекистан',
+            'name' => 'Barbados',
         ]);
 
         $country = Country::create([
-            'name' => 'Камбоджа',
+            'name' => 'Belarus',
         ]);
 
         $country = Country::create([
-            'name' => 'Катар',
+            'name' => 'Belgium',
         ]);
 
         $country = Country::create([
-            'name' => 'Кипр',
+            'name' => 'Belize',
         ]);
 
         $country = Country::create([
-            'name' => 'Киргизия',
+            'name' => 'Benin',
         ]);
 
         $country = Country::create([
-            'name' => 'КНДР',
+            'name' => 'Bermuda',
         ]);
 
         $country = Country::create([
-            'name' => 'Китай',
+            'name' => 'Bhutan',
         ]);
 
         $country = Country::create([
-            'name' => 'Кувейт',
+            'name' => 'Bolivia',
         ]);
 
         $country = Country::create([
-            'name' => 'Лаос',
+            'name' => 'Bosnia and Herzegowina',
         ]);
 
         $country = Country::create([
-            'name' => 'Ливан',
+            'name' => 'Botswana',
         ]);
 
         $country = Country::create([
-            'name' => 'Макао',
+            'name' => 'Bouvet Island',
         ]);
 
         $country = Country::create([
-            'name' => 'Малайзия',
+            'name' => 'Brazil',
         ]);
 
         $country = Country::create([
-            'name' => 'Мальдивы',
+            'name' => 'British Indian Ocean Territory',
         ]);
 
         $country = Country::create([
-            'name' => 'Монголия',
+            'name' => 'Brunei Darussalam',
         ]);
 
         $country = Country::create([
-            'name' => 'Мьянма',
+            'name' => 'Bulgaria',
         ]);
 
         $country = Country::create([
-            'name' => 'Непал',
+            'name' => 'Burkina Faso',
         ]);
 
         $country = Country::create([
-            'name' => 'ОАЭ',
+            'name' => 'Burundi',
         ]);
 
         $country = Country::create([
-            'name' => 'Оман',
+            'name' => 'Cambodia',
         ]);
 
         $country = Country::create([
-            'name' => 'Пакистан',
+            'name' => 'Cameroon',
         ]);
 
         $country = Country::create([
-            'name' => 'Палестина',
+            'name' => 'Canada',
         ]);
 
         $country = Country::create([
-            'name' => 'Тайвань',
+            'name' => 'Cape Verde',
         ]);
 
         $country = Country::create([
-            'name' => 'Саудовская Аравия',
+            'name' => 'Cayman Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Сингапур',
+            'name' => 'Central African Republic',
         ]);
 
         $country = Country::create([
-            'name' => 'Сирия',
+            'name' => 'Chad',
         ]);
 
         $country = Country::create([
-            'name' => 'Таджикистан',
+            'name' => 'Chile',
         ]);
 
         $country = Country::create([
-            'name' => 'Таиланд',
+            'name' => 'China',
         ]);
 
         $country = Country::create([
-            'name' => 'Туркменистан',
+            'name' => 'Christmas Island',
         ]);
 
         $country = Country::create([
-            'name' => 'Турция',
+            'name' => 'Cocos (Keeling) Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Филиппины',
+            'name' => 'Colombia',
         ]);
 
         $country = Country::create([
-            'name' => 'Шри-Ланка',
+            'name' => 'Comoros',
         ]);
 
         $country = Country::create([
-            'name' => 'Южная Корея',
+            'name' => 'Congo',
         ]);
 
         $country = Country::create([
-            'name' => 'Япония',
+            'name' => 'Congo, the Democratic Republic of the',
         ]);
 
         $country = Country::create([
-            'name' => 'Алжир',
+            'name' => 'Cook Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Ангола',
+            'name' => 'Costa Rica',
         ]);
 
         $country = Country::create([
-            'name' => 'Бенин',
+            'name' => 'Cote d\'Ivoire',
         ]);
 
         $country = Country::create([
-            'name' => 'Ботсвана',
+        'name' => 'Croatia',
         ]);
 
         $country = Country::create([
-            'name' => 'Буркина-Фасо',
+        'name' => 'Cuba',
         ]);
 
         $country = Country::create([
-            'name' => 'Бурунди',
+        'name' => 'Cyprus',
         ]);
 
         $country = Country::create([
-            'name' => 'Габон',
+        'name' => 'Czech Republic',
         ]);
 
         $country = Country::create([
-            'name' => 'Гамбия',
+        'name' => 'Denmark',
         ]);
 
         $country = Country::create([
-            'name' => 'Гана',
+        'name' => 'Djibouti',
         ]);
 
         $country = Country::create([
-            'name' => 'Гвинея',
+        'name' => 'Dominica',
         ]);
 
         $country = Country::create([
-            'name' => 'Гвинея-Бисау',
+        'name' => 'Dominican Republic',
         ]);
 
         $country = Country::create([
-            'name' => 'Джибути',
+        'name' => 'East Timor',
         ]);
 
         $country = Country::create([
-            'name' => 'Египет',
+        'name' => 'Ecuador',
         ]);
 
         $country = Country::create([
-            'name' => 'Замбия',
+        'name' => 'Egypt',
         ]);
 
         $country = Country::create([
-            'name' => 'Западная Сахара',
+        'name' => 'El Salvador',
         ]);
 
         $country = Country::create([
-            'name' => 'Зимбабве',
+        'name' => 'Equatorial Guinea',
         ]);
 
         $country = Country::create([
-            'name' => 'Кабо-Верде',
+        'name' => 'Eritrea',
         ]);
 
         $country = Country::create([
-            'name' => 'Кот-д\'Ивуар',
+        'name' => 'Estonia',
         ]);
 
         $country = Country::create([
-            'name' => 'Камерун',
+        'name' => 'Ethiopia',
         ]);
 
         $country = Country::create([
-            'name' => 'Кения',
+        'name' => 'Falkland Islands (Malvinas)',
         ]);
 
         $country = Country::create([
-            'name' => 'Коморские острова',
+        'name' => 'Faroe Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Демократическая Республика Конго',
+        'name' => 'Fiji',
         ]);
 
         $country = Country::create([
-            'name' => 'Лесото',
+        'name' => 'Finland',
         ]);
 
         $country = Country::create([
-            'name' => 'Либерия',
+        'name' => 'France',
         ]);
 
         $country = Country::create([
-            'name' => 'Ливия',
+        'name' => 'France Metropolitan',
         ]);
 
         $country = Country::create([
-            'name' => 'Маврикий',
+        'name' => 'French Guiana',
         ]);
 
         $country = Country::create([
-            'name' => 'Мавритания',
+        'name' => 'French Polynesia',
         ]);
 
         $country = Country::create([
-            'name' => 'Мадагаскар',
+        'name' => 'French Southern Territories',
         ]);
 
         $country = Country::create([
-            'name' => 'Малави',
+        'name' => 'Gabon',
         ]);
 
         $country = Country::create([
-            'name' => 'Мали',
+        'name' => 'Gambia',
         ]);
 
         $country = Country::create([
-            'name' => 'Марокко',
+        'name' => 'Georgia',
         ]);
 
         $country = Country::create([
-            'name' => 'Мозамбик',
+        'name' => 'Germany',
         ]);
 
         $country = Country::create([
-            'name' => 'Намибия',
+        'name' => 'Ghana',
         ]);
 
         $country = Country::create([
-            'name' => 'Нигер',
+        'name' => 'Gibraltar',
         ]);
 
         $country = Country::create([
-            'name' => 'Нигерия',
+        'name' => 'Greece',
         ]);
 
         $country = Country::create([
-            'name' => 'Реюньон',
+        'name' => 'Greenland',
         ]);
 
         $country = Country::create([
-            'name' => 'Руанда',
+        'name' => 'Grenada',
         ]);
 
         $country = Country::create([
-            'name' => 'Сан-Томе и Принсипи',
+        'name' => 'Guadeloupe',
         ]);
 
         $country = Country::create([
-            'name' => 'Свазиленд',
+        'name' => 'Guam',
         ]);
 
         $country = Country::create([
-            'name' => 'Святой Елены Остров',
+        'name' => 'Guatemala',
         ]);
 
         $country = Country::create([
-            'name' => 'Сейшельские острова',
+        'name' => 'Guinea',
         ]);
 
         $country = Country::create([
-            'name' => 'Сенегал',
+        'name' => 'Guinea-Bissau',
         ]);
 
         $country = Country::create([
-            'name' => '«Сеута и Мелилья» Испания',
+        'name' => 'Guyana',
         ]);
 
         $country = Country::create([
-            'name' => 'Сомали',
+        'name' => 'Haiti',
         ]);
 
         $country = Country::create([
-            'name' => 'Судан',
+        'name' => 'Heard and Mc Donald Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Сьерра-Леоне',
+        'name' => 'Holy See (Vatican City State)',
         ]);
 
         $country = Country::create([
-            'name' => 'Танзания',
+        'name' => 'Honduras',
         ]);
 
         $country = Country::create([
-            'name' => 'Того',
+        'name' => 'Hong Kong',
         ]);
 
         $country = Country::create([
-            'name' => 'Тунис',
+        'name' => 'Hungary',
         ]);
 
         $country = Country::create([
-            'name' => 'Уганда',
+        'name' => 'Iceland',
         ]);
 
         $country = Country::create([
-            'name' => 'ЧАД',
+        'name' => 'India',
         ]);
 
         $country = Country::create([
-            'name' => 'Центрально-Африканская республика',
+        'name' => 'Indonesia',
         ]);
 
         $country = Country::create([
-            'name' => 'Экваториальная Гвинея',
+        'name' => 'Iran (Islamic Republic of)',
         ]);
 
         $country = Country::create([
-            'name' => 'Эритрея',
+        'name' => 'Iraq',
         ]);
 
         $country = Country::create([
-            'name' => 'Эфиопия',
+        'name' => 'Ireland',
         ]);
 
         $country = Country::create([
-            'name' => 'Южно-Африканская Республика',
+        'name' => 'Israel',
         ]);
 
         $country = Country::create([
-            'name' => 'Австрия',
+        'name' => 'Italy',
         ]);
 
         $country = Country::create([
-            'name' => 'Андорра',
+        'name' => 'Jamaica',
         ]);
 
         $country = Country::create([
-            'name' => 'Албания',
+        'name' => 'Japan',
         ]);
 
         $country = Country::create([
-            'name' => 'Беларусь',
+        'name' => 'Jordan',
         ]);
 
         $country = Country::create([
-            'name' => 'Бельгия',
+        'name' => 'Kazakhstan',
         ]);
 
         $country = Country::create([
-            'name' => 'Болгария',
+        'name' => 'Kenya',
         ]);
 
         $country = Country::create([
-            'name' => 'Босния и Герцеговина',
+        'name' => 'Kiribati',
         ]);
 
         $country = Country::create([
-            'name' => 'Ватикан',
+        'name' => 'Korea, Democratic People\'s Republic of',
         ]);
 
         $country = Country::create([
-            'name' => 'Великобритания',
+            'name' => 'Korea, Republic of',
         ]);
 
         $country = Country::create([
-            'name' => 'Венгрия',
+            'name' => 'Kuwait',
         ]);
 
         $country = Country::create([
-            'name' => 'Германия',
+            'name' => 'Kyrgyzstan',
         ]);
 
         $country = Country::create([
-            'name' => 'Гибралтар',
+            'name' => 'Lao, People\'s Democratic Republic',
         ]);
 
         $country = Country::create([
-            'name' => 'Греция',
+        'name' => 'Latvia',
         ]);
 
         $country = Country::create([
-            'name' => 'Дания',
+        'name' => 'Lebanon',
         ]);
 
         $country = Country::create([
-            'name' => 'Ирландия',
+        'name' => 'Lesotho',
         ]);
 
         $country = Country::create([
-            'name' => 'Исландия',
+        'name' => 'Liberia',
         ]);
 
         $country = Country::create([
-            'name' => 'Испания',
+        'name' => 'Libyan Arab Jamahiriya',
         ]);
 
         $country = Country::create([
-            'name' => 'Италия',
+        'name' => 'Liechtenstein',
         ]);
 
         $country = Country::create([
-            'name' => 'Латвия',
+        'name' => 'Lithuania',
         ]);
 
         $country = Country::create([
-            'name' => 'Литва',
+        'name' => 'Luxembourg',
         ]);
 
         $country = Country::create([
-            'name' => 'Лихтенштейн',
+        'name' => 'Macau',
         ]);
 
         $country = Country::create([
-            'name' => 'Люксембург',
+        'name' => 'Macedonia, The Former Yugoslav Republic of',
         ]);
 
         $country = Country::create([
-            'name' => 'Македония',
+        'name' => 'Madagascar',
         ]);
 
         $country = Country::create([
-            'name' => 'Мальта',
+        'name' => 'Malawi',
         ]);
 
         $country = Country::create([
-            'name' => 'Молдавия',
+        'name' => 'Malaysia',
         ]);
 
         $country = Country::create([
-            'name' => 'Монако',
+        'name' => 'Maldives',
         ]);
 
         $country = Country::create([
-            'name' => 'Нидерланды',
+        'name' => 'Mali',
         ]);
 
         $country = Country::create([
-            'name' => 'Норвегия',
+        'name' => 'Malta',
         ]);
 
         $country = Country::create([
-            'name' => 'Польша',
+        'name' => 'Marshall Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Португалия',
+        'name' => 'Martinique',
         ]);
 
         $country = Country::create([
-            'name' => 'Россия',
+        'name' => 'Mauritania',
         ]);
 
         $country = Country::create([
-            'name' => 'Румыния',
+        'name' => 'Mauritius',
         ]);
 
         $country = Country::create([
-            'name' => 'Сан-Марино',
+        'name' => 'Mayotte',
         ]);
 
         $country = Country::create([
-            'name' => 'Сербия и Черногория',
+        'name' => 'Mexico',
         ]);
 
         $country = Country::create([
-            'name' => 'Словакия',
+        'name' => 'Micronesia, Federated States of',
         ]);
 
         $country = Country::create([
-            'name' => 'Словения',
+        'name' => 'Moldova, Republic of',
         ]);
 
         $country = Country::create([
-            'name' => 'Украина',
+        'name' => 'Monaco',
         ]);
 
         $country = Country::create([
-            'name' => 'Фарерские острова',
+        'name' => 'Mongolia',
         ]);
 
         $country = Country::create([
-            'name' => 'Финляндия',
+        'name' => 'Montserrat',
         ]);
 
         $country = Country::create([
-            'name' => 'Франция',
+        'name' => 'Morocco',
         ]);
 
         $country = Country::create([
-            'name' => 'Хорватия',
+        'name' => 'Mozambique',
         ]);
 
         $country = Country::create([
-            'name' => 'Черногория',
+        'name' => 'Myanmar',
         ]);
 
         $country = Country::create([
-            'name' => 'Чехия',
+        'name' => 'Namibia',
         ]);
 
         $country = Country::create([
-            'name' => 'Швейцария',
+        'name' => 'Nauru',
         ]);
 
         $country = Country::create([
-            'name' => 'Швеция',
+        'name' => 'Nepal',
         ]);
 
         $country = Country::create([
-            'name' => 'Эстония',
+        'name' => 'Netherlands',
         ]);
 
         $country = Country::create([
-            'name' => 'Австралия',
+        'name' => 'Netherlands Antilles',
         ]);
 
         $country = Country::create([
-            'name' => 'Вануату',
+        'name' => 'New Caledonia',
         ]);
 
         $country = Country::create([
-            'name' => 'Гуам',
+        'name' => 'New Zealand',
         ]);
 
         $country = Country::create([
-            'name' => 'Восточное (Американское) Самоа',
+        'name' => 'Nicaragua',
         ]);
 
         $country = Country::create([
-            'name' => 'Западное Самоа',
+        'name' => 'Niger',
         ]);
 
         $country = Country::create([
-            'name' => 'Кирибати',
+        'name' => 'Nigeria',
         ]);
 
         $country = Country::create([
-            'name' => 'Кокосовые острова',
+        'name' => 'Niue',
         ]);
 
         $country = Country::create([
-            'name' => 'Кука острова',
+        'name' => 'Norfolk Island',
         ]);
 
         $country = Country::create([
-            'name' => 'Маршаловы острова',
+        'name' => 'Northern Mariana Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Мидуэй',
+        'name' => 'Norway',
         ]);
 
         $country = Country::create([
-            'name' => 'Микронезия',
+        'name' => 'Oman',
         ]);
 
         $country = Country::create([
-            'name' => 'Науру',
+        'name' => 'Pakistan',
         ]);
 
         $country = Country::create([
-            'name' => 'Ниуэ',
+        'name' => 'Palau',
         ]);
 
         $country = Country::create([
-            'name' => 'Новая Зеландия',
+        'name' => 'Panama',
         ]);
 
         $country = Country::create([
-            'name' => 'Новая Каледония',
+        'name' => 'Papua New Guinea',
         ]);
 
         $country = Country::create([
-            'name' => 'Норфолк',
+        'name' => 'Paraguay',
         ]);
 
         $country = Country::create([
-            'name' => 'Палау',
+        'name' => 'Peru',
         ]);
 
         $country = Country::create([
-            'name' => 'Папуа-Новая Гвинея',
+        'name' => 'Philippines',
         ]);
 
         $country = Country::create([
-            'name' => 'Питкэрн',
+        'name' => 'Pitcairn',
         ]);
 
         $country = Country::create([
-            'name' => 'Рождества остров',
+        'name' => 'Poland',
         ]);
 
         $country = Country::create([
-            'name' => 'Северные Марианские острова',
+        'name' => 'Portugal',
         ]);
 
         $country = Country::create([
-            'name' => 'Токелау',
+        'name' => 'Puerto Rico',
         ]);
 
         $country = Country::create([
-            'name' => 'Тонга',
+        'name' => 'Qatar',
         ]);
 
         $country = Country::create([
-            'name' => 'Тувалу',
+        'name' => 'Reunion',
         ]);
 
         $country = Country::create([
-            'name' => 'Уоллис и Футуна',
+        'name' => 'Romania',
         ]);
 
         $country = Country::create([
-            'name' => 'Уэйк',
+        'name' => 'Russian Federation',
         ]);
 
         $country = Country::create([
-            'name' => 'Фиджи',
+        'name' => 'Rwanda',
         ]);
 
         $country = Country::create([
-            'name' => 'Французская полинезия',
+        'name' => 'Saint Kitts and Nevis',
         ]);
 
         $country = Country::create([
-            'name' => 'Гренландия',
+        'name' => 'Saint Lucia',
         ]);
 
         $country = Country::create([
-            'name' => 'Канада',
+        'name' => 'Saint Vincent and the Grenadines',
         ]);
 
         $country = Country::create([
-            'name' => 'Мексика',
+        'name' => 'Samoa',
         ]);
 
         $country = Country::create([
-            'name' => 'Сен-Пьер и Микелон',
+        'name' => 'San Marino',
         ]);
 
         $country = Country::create([
-            'name' => 'США',
+        'name' => 'Sao Tome and Principe',
         ]);
 
         $country = Country::create([
-            'name' => 'Ангилья (Ангуилла)',
+        'name' => 'Saudi Arabia',
         ]);
 
         $country = Country::create([
-            'name' => 'Антигуа и Барбуда',
+        'name' => 'Senegal',
         ]);
 
         $country = Country::create([
-            'name' => 'Нидерландские Антиллы',
+        'name' => 'Seychelles',
         ]);
 
         $country = Country::create([
-            'name' => 'Аруба',
+        'name' => 'Sierra Leone',
         ]);
 
         $country = Country::create([
-            'name' => 'Багамские острова',
+        'name' => 'Singapore',
         ]);
 
         $country = Country::create([
-            'name' => 'Барбадос',
+        'name' => 'Slovakia (Slovak Republic)',
         ]);
 
         $country = Country::create([
-            'name' => 'Белиз',
+        'name' => 'Slovenia',
         ]);
 
         $country = Country::create([
-            'name' => 'Бермудские острова',
+        'name' => 'Solomon Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Британские Виргинские острова',
+        'name' => 'Somalia',
         ]);
 
         $country = Country::create([
-            'name' => 'Виргинские острова',
+        'name' => 'South Africa',
         ]);
 
         $country = Country::create([
-            'name' => 'Гаити',
+        'name' => 'South Georgia and the South Sandwich Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Гваделупа',
+        'name' => 'Spain',
         ]);
 
         $country = Country::create([
-            'name' => 'Гватемала',
+        'name' => 'Sri Lanka',
         ]);
 
         $country = Country::create([
-            'name' => 'Гондурас',
+        'name' => 'St. Helena',
         ]);
 
         $country = Country::create([
-            'name' => 'Гренада',
+        'name' => 'St. Pierre and Miquelon',
         ]);
 
         $country = Country::create([
-            'name' => 'Доминика',
+        'name' => 'Sudan',
         ]);
 
         $country = Country::create([
-            'name' => 'Доминиканская республика',
+        'name' => 'Suriname',
         ]);
 
         $country = Country::create([
-            'name' => 'Каймановы острова',
+        'name' => 'Svalbard and Jan Mayen Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Коста-Рика',
+        'name' => 'Swaziland',
         ]);
 
         $country = Country::create([
-            'name' => 'Куба',
+        'name' => 'Sweden',
         ]);
 
         $country = Country::create([
-            'name' => 'Мартиника',
+        'name' => 'Switzerland',
         ]);
 
         $country = Country::create([
-            'name' => 'Монтсеррат',
+        'name' => 'Syrian Arab Republic',
         ]);
 
         $country = Country::create([
-            'name' => 'Никарагуа',
+        'name' => 'Taiwan',
         ]);
 
         $country = Country::create([
-            'name' => 'Панама',
+        'name' => 'Tajikistan',
         ]);
 
         $country = Country::create([
-            'name' => 'Пуэрто-Рико',
+        'name' => 'Tanzania, United Republic of',
         ]);
 
         $country = Country::create([
-            'name' => 'Сальвадор',
+        'name' => 'Thailand',
         ]);
 
         $country = Country::create([
-            'name' => 'Сент-Винсент и Гренадины',
+        'name' => 'Togo',
         ]);
 
         $country = Country::create([
-            'name' => 'Сент-Китс и Невис',
+        'name' => 'Tokelau',
         ]);
 
         $country = Country::create([
-            'name' => 'Сент-Люсия',
+        'name' => 'Tonga',
         ]);
 
         $country = Country::create([
-            'name' => 'Тёркс и Кайкос',
+        'name' => 'Trinidad and Tobago',
         ]);
 
         $country = Country::create([
-            'name' => 'Тринидад и Тобаго',
+        'name' => 'Tunisia',
         ]);
 
         $country = Country::create([
-            'name' => 'Ямайка',
+        'name' => 'Turkey',
         ]);
 
         $country = Country::create([
-            'name' => 'Аргентина',
+        'name' => 'Turkmenistan',
         ]);
 
         $country = Country::create([
-            'name' => 'Боливия',
+        'name' => 'Turks and Caicos Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Бразилия',
+        'name' => 'Tuvalu',
         ]);
 
         $country = Country::create([
-            'name' => 'Венесуэла',
+        'name' => 'Uganda',
         ]);
 
         $country = Country::create([
-            'name' => 'Гайана',
+        'name' => 'Ukraine',
         ]);
 
         $country = Country::create([
-            'name' => '«Гвиана» Франция',
+        'name' => 'United Arab Emirates',
         ]);
 
         $country = Country::create([
-            'name' => 'Колумбия',
+        'name' => 'United Kingdom',
         ]);
 
         $country = Country::create([
-            'name' => 'Парагвай',
+        'name' => 'United States',
         ]);
 
         $country = Country::create([
-            'name' => 'Перу',
+        'name' => 'United States Minor Outlying Islands',
         ]);
 
         $country = Country::create([
-            'name' => 'Суринам',
+        'name' => 'Uruguay',
         ]);
 
         $country = Country::create([
-            'name' => 'Уругвай',
+        'name' => 'Uzbekistan',
         ]);
 
         $country = Country::create([
-            'name' => 'Фолклендские (Мальвинские) острова',
+        'name' => 'Vanuatu',
         ]);
 
         $country = Country::create([
-            'name' => 'Чили',
+        'name' => 'Venezuela',
         ]);
 
         $country = Country::create([
-            'name' => 'Эквадор',
+        'name' => 'Vietnam',
+        ]);
+
+        $country = Country::create([
+        'name' => 'Virgin Islands (British)',
+        ]);
+
+        $country = Country::create([
+        'name' => 'Virgin Islands (U.S.)',
+        ]);
+
+        $country = Country::create([
+        'name' => 'Wallis and Futuna Islands',
+        ]);
+
+        $country = Country::create([
+        'name' => 'Western Sahara',
+        ]);
+
+        $country = Country::create([
+        'name' => 'Yemen',
+        ]);
+
+        $country = Country::create([
+        'name' => 'Zambia',
+        ]);
+
+        $country = Country::create([
+        'name' => 'Zimbabwe',
         ]);
     }
 }

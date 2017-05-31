@@ -19,10 +19,11 @@ class CreateUsersTable extends Migration
             $table->boolean('is_verified')->default(0);
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('image')->default('/images/profile/default.png');
+            $table->string('image')->default('default.png');
             $table->string('city')->nullable();
             $table->integer('country_id')->nullable()->unsigned();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+            $table->longText('about')->nullable();
             $table->boolean('show_adult')->default(0);
             $table->string('password');
             $table->rememberToken();

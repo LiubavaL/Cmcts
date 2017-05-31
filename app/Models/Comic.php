@@ -14,7 +14,9 @@ class Comic extends BaseModel
         'description',
         'cover',
         'adult_content',
-        'status_id'
+        'slug',
+        'status_id',
+        'created_at'
     ];
 
     /**
@@ -47,6 +49,11 @@ class Comic extends BaseModel
         return $this->belongsTo('App\Models\User');
     }
 
+    public function subscribers()
+    {
+        return $this->belongsToMany('App\Models\User', 'subscriptions');
+    }
+
      public function genres()
     {
         return $this->belongsToMany('App\Models\Genre');
@@ -55,5 +62,15 @@ class Comic extends BaseModel
      public function likes()
     {
         return $this->belongsToMany('App\Models\User', 'likes');
+    }
+
+     public function comments()
+    {
+        return $this->hasMany('App\Models\ComicComment');
+    }
+
+     public function extra_covers()
+    {
+        return $this->hasMany('App\Models\ExtraCover');
     }
 }

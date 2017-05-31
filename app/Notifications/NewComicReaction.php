@@ -66,7 +66,7 @@ class NewComicReaction extends Notification
         return [
             'rater_id' => $this->subscriptor->id,
             'rater_name' => $this->subscriptor->name,
-            'comic_id' => $this->comic->id,
+            'comic_slug' => $this->comic->slug,
             'comic_title' => $this->comic->title,
         ];
     }

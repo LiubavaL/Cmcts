@@ -48,18 +48,16 @@ class SendConfirmationEmail
         $oldToken = ConfirmUsers::where('email', $user->email)->first();
         $token = str_random(32);
 
-        if($oldToken == null){//ранее токен не высылался, либо пользователь уже подтвержден - добавляем
-            $confirmation = new ConfirmUsers;
+        $confirmation = new ConfirmUsers;
+        $confirmation->token = $token;
+        $confirmation->email = $user->email;
 
-            $confirmation->token = $token;
-            $confirmation->email = $user->email;
+        if($oldToken == null){//ранее токен не высылался, либо пользователь уже подтвержден - добавляем
             $confirmation->save();
         }else{//обновляем токен, если он существует в базе
             $oldToken->token = $token;
             $oldToken->touch();
         }
-
-
 
         $confirmationLink = 'http://comicats.herokuapp.com/activate/'.$confirmation->token;
 

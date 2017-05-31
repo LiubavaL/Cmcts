@@ -149,9 +149,9 @@ class Zip
      */
     public function extractTo($path, array $files = array(), $methodFlags = Zip::BLACKLIST)
     {
-        if (!$this->file->exists($path) && !$this->file->makeDirectory($path, 0755, true)) {
+        /*if (!$this->file->exists($path) && !$this->file->makeDirectory($path, 0755, true)) {
             throw new \RuntimeException('Failed to create folder');
-        }
+        }*/
 
         if ($methodFlags & Zip::EXACT_MATCH) {
             $matchingMethod = function ($haystack) use ($files) {
@@ -558,7 +558,7 @@ class Zip
     private function extractOneFileS3($fileName){
         $fileStream = $this->repository->getFileStream(str_replace('/', '\\', $fileName));
         if($fileStream){
-            $this->s3->put(get_s3_path($fileName).$fileName, $fileStream, 'public');
+            $this->s3->put(get_s3_page_path($fileName), $fileStream, 'public');
         }else{
             throw new ExtractFileException('Can\'t read file');
         }

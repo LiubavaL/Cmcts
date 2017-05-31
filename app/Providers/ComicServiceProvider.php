@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Services\ComicService;
-use Debugbar;
 
 class ComicServiceProvider extends ServiceProvider
 {
@@ -33,12 +32,9 @@ class ComicServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Debugbar::info('sart bind comic service');
-
         $this->app->bind('App\Services\ComicService', function(){
             return new ComicService();
         });
-
     }
 
     /**
@@ -48,7 +44,6 @@ class ComicServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        Debugbar::info('return comic service');
         return ['App\Services\ComicService'];
     }
 }

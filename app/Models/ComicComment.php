@@ -5,12 +5,13 @@ namespace App\Models;
 
 class ComicComment extends BaseModel
 {
-    protected $table = 'comic-comments';
+    protected $table = 'comic_comments';
 
     protected $fillable = [
         'content',
         'comic_id',
-        'uaer_id',
+        'user_id',
+        'created_at',
     ];
 
     public function comic()

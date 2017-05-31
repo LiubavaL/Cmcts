@@ -28,10 +28,10 @@ class UpdateSettingsRequest extends FormRequest
         return array_merge(
             $parentMessages,
             [
-                'max' => 'Рвзмер изображения не должен превыщать :attribute Кб.',
-                'mimes' => 'Изображение должно быть формата jpg или png.',
-                'confirmed' => 'Пароли не совпадают.',
-                'string' => 'Поле может соержать только буквы.',
+                'max' => 'Max available size is :attribute Kb.',
+                'mimes' => 'Inage must have jpg or png format.',
+                'confirmed' => 'passwords are not equal.',
+                'string' => 'Field can accept only letters.',
         ]);
     }
 
@@ -46,11 +46,15 @@ class UpdateSettingsRequest extends FormRequest
         $rules = array();
 
         switch($activeTab) {
-            case 'general':;break;
+            case 'general':
+                $rules = [
+                    'email' => 'sometimes|required|email'
+                ]
+                ;break;
             case 'account':
                 $rules = [
-                    'cover' => 'image|mimes:jpeg,png,jpg',
                     'password' => 'confirmed|min:6',
+                    'about' => 'max:255',
                     'country' => 'string'
                 ]
                 ;break;

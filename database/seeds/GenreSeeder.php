@@ -15,135 +15,135 @@ class GenreSeeder extends Seeder
         DB::table('genres')->delete();
 
         $genre = Genre::create([
-            'title' => 'artbook',
+            'title' => 'Artbook',
         ]);
 
         $genre = Genre::create([
-            'title' => 'comedy',
+            'title' => 'Comedy',
         ]);
         
         $genre = Genre::create([
-            'title' => 'drama',
+            'title' => 'Drama',
         ]);
         
         $genre = Genre::create([
-            'title' => 'fantasy',
+            'title' => 'Fantasy',
         ]);
         
         $genre = Genre::create([
-            'title' => 'harem',
+            'title' => 'Harem',
         ]);
         
         $genre = Genre::create([
-            'title' => 'horror',
+            'title' => 'Horror',
         ]);
         
         $genre = Genre::create([
-            'title' => 'mecha',
+            'title' => 'Mecha',
         ]);
         
         $genre = Genre::create([
-            'title' => 'romance',
+            'title' => 'Romance',
         ]);
         
         $genre = Genre::create([
-            'title' => 'sci-fi',
+            'title' => 'Sci-fi',
         ]);
         
         $genre = Genre::create([
-            'title' => 'shoujo',
+            'title' => 'Shoujo',
         ]);
         
         $genre = Genre::create([
-            'title' => 'shounen',
+            'title' => 'Shounen',
         ]);
         
         $genre = Genre::create([
-            'title' => 'slice of life',
+            'title' => 'Slice of Life',
         ]);
         
         $genre = Genre::create([
-            'title' => 'sports',
+            'title' => 'Sports',
         ]);
         
         $genre = Genre::create([
-            'title' => 'tragedy',
+            'title' => 'Tragedy',
         ]);
         
         $genre = Genre::create([
-            'title' => 'yaoi',
+            'title' => 'Yaoi',
         ]);
         
         $genre = Genre::create([
-            'title' => 'action',
+            'title' => 'Action',
         ]);
         
         $genre = Genre::create([
-            'title' => 'adventire',
+            'title' => 'Adventire',
         ]);
         
         $genre = Genre::create([
-            'title' => 'doujinshi',
+            'title' => 'Doujinshi',
         ]);
         
         $genre = Genre::create([
-            'title' => 'ecchi',
+            'title' => 'Ecchi',
         ]);
         
         $genre = Genre::create([
-            'title' => 'gender bender',
+            'title' => 'Gender bender',
         ]);
         
         $genre = Genre::create([
-            'title' => 'historical',
+            'title' => 'Historical',
         ]);
         
         $genre = Genre::create([
-            'title' => 'josei',
+            'title' => 'Josei',
         ]);
         
         $genre = Genre::create([
-            'title' => 'mystery',
+            'title' => 'Mystery',
         ]);
         
         $genre = Genre::create([
-            'title' => 'psychological',
+            'title' => 'Psychological',
         ]);
         
         $genre = Genre::create([
-            'title' => 'school life',
+            'title' => 'School life',
         ]);
 
         $genre = Genre::create([
-            'title' => 'seinen',
+            'title' => 'Seinen',
         ]);
 
         $genre = Genre::create([
-            'title' => 'shoujo-ai',
+            'title' => 'Shoujo-ai',
         ]);
 
         $genre = Genre::create([
-            'title' => 'shounen-ai',
+            'title' => 'Shounen-ai',
         ]);
 
         $genre = Genre::create([
-            'title' => 'supernatural',
+            'title' => 'Supernatural',
         ]);
 
         $genre = Genre::create([
-            'title' => 'yuri',
+            'title' => 'Yuri',
         ]);
 
         $genre = Genre::create([
-            'title' => 'трагедия',
+            'title' => 'Tragedy',
         ]);
 
         $genre = Genre::create([
-            'title' => 'триллер',
+            'title' => 'Thriller',
         ]);
 
         $genre = Genre::create([
-            'title' => 'ужасы',
+            'title' => 'Horror',
         ]);
     }
 }

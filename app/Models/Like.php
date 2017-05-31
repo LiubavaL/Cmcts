@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Like extends BaseModel
+class Like extends Pivot
 {
     protected $fillable = [
     ];

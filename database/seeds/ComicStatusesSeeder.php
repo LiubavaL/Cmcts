@@ -15,13 +15,13 @@ class ComicStatusesSeeder extends Seeder
         DB::table('comic_statuses')->delete();
 
         $comicStatus = ComicStatus::create([
-            'title' => 'выпускается',
+            'title' => 'Ongoing',
         ]);
         $comicStatus = ComicStatus::create([
-            'title' => 'заморожен',
+            'title' => 'Frozen',
         ]);
         $comicStatus = ComicStatus::create([
-            'title' => 'завершен',
+            'title' => 'Finished',
         ]);
     }
 }

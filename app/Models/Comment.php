@@ -10,7 +10,7 @@ class Comment extends BaseModel
     protected $fillable = [
         'content',
         'image_id',
-        'uaer_id',
+        'user_id',
     ];
 
     public function image()

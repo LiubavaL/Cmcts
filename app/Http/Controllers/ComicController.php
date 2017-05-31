@@ -3,182 +3,178 @@
 namespace App\Http\Controllers;
 
 
+use App\ExtraCover;
 use App\Notifications\NewComicReaction;
 use Illuminate\Http\Request;
 use App\Http\Requests\UploadComicRequest;
+use App\Http\Requests\Upload2ComicRequest;
 use App\Services\ComicService;
+use App\Services\ChapterService;
 use App\Models\Comic;
 use App\Models\Volume;
 use App\Models\Chapter;
 use App\Models\ComicStatus;
 use App\Models\Genre;
 use App\Models\Image;
+use App\Models\User;
+use App\Models\ExtraCover as ExtraComicCover;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Analytics\Period;
+use Session;
 use Analytics;
 use File;
 use Debugbar;
-use Log;
 use DB;
 use Illuminate\Support\Facades\Storage;
 
 class ComicController extends Controller
 {
 
-    public function like(Request $request)
-    {
-        $comicSlug = $request->route('slug');
-        $comic = Comic::where('slug', $comicSlug)->first();
-        $user = Auth::user();
-
-        $user->like($comic->id);
-
-        $user->notify(new NewComicReaction($user, $comic));
-
-        return redirect()->back();
-    }
-
-    public function dislike(Request $request)
-    {
-        $comicSlug = $request->route('slug');
-        $comic = Comic::where('slug', $comicSlug)->first();
-        $user = Auth::user();
-
-        $user->dislike($comic->id);
-
-        return redirect()->back();
-    }
-
     //CRUD
-    public function getUpload(Request $request)
-    {
-        return view('comic.upload', ['comicStatuses' => ComicStatus::all(), 'genres' => Genre::all()]);
+    public function getUpload1(){
+        return view('comic.upload-1', ['comicStatuses' => ComicStatus::all(), 'genres' => Genre::all()]);
     }
 
-    public function postUpload(UploadComicRequest $request, ComicService $comicService)
-    {
-        //handle cover image upload
-        $s3 = Storage::disk('s3');
-        $imageName = time() . '.' . $request->cover->getClientOriginalExtension();
-        if($request->cover){
-            $s3->put(get_s3_path($imageName).$imageName, $request->cover, 'public');
-        }else{
-           // throw new ExtractFileException('Can\'t read file');
+    public function getUpload2(){
+        return view('comic.upload-2');
+    }
+
+    public function postUpload1(UploadComicRequest $request){
+        if(!$request->session()->has('title')){
+            session(['title'=> $request->title]);
+        }
+        if(!$request->session()->has('description')){
+            session(['description'=> $request->description]);
+        }
+        if(!$request->session()->has('status_id')){
+            session(['status_id'=> $request->comic_status]);
+        }
+        if(!$request->session()->has('single')){
+            session(['single'=> $request->single]);
+        }
+        if(!$request->session()->has('adult_content')){
+            session(['adult_content'=> $request->adult_content]);
+        }
+        if(!$request->session()->has('cover')){
+            session(['cover'=> $request->cover]);
+        }
+        if(!$request->session()->has('genres')){
+            Session::push('genres',  collect($request->input('genres')));
+        }
+        if(!$request->session()->has('extra_covers')){
+            Session::push('extra_covers', collect($request->input('extra-cover')));
         }
 
-        $adultContent = (!empty($request->adult_content)) ? 1 : 0;
+        return redirect('/comic/create-2');
+    }
+
+    public function postUpload2(Upload2ComicRequest $request, ComicService $comicService){
+        //handle cover image upload
+        $s3 = Storage::disk('s3');
+        $adultContent = ($request->session()->pull('adult_content')) ? 1 : 0;
+        $cover = null;
+        $newExtraCovers = null;
 
         //start transaction
         DB::beginTransaction();
 
-        //create comic instance
-        /*$comic = new Comic;
-        $comic->user_id = Auth::id();
-        $comic->title = $request->title;
-        $comic->description = $request->description;
-        $comic->cover = $imageName;
-        $comic->status_id = $request->comic_status;
-        $comic->adult_content = $adultContent;
+        if(session('cover')){
+            $cover = $comicService->putCover($request->session()->pull('cover'), $s3);
+        }else{
+            // throw new ExtractFileException('Can\'t read file');
+        }
+        if(session('extra_covers')){
+            $exCovers = $request->session()->pull('extra_covers');
+            $newExtraCovers = $comicService->putExtraCovers($exCovers[0], $s3);
+        }else{
+            // throw new ExtractFileException('Can\'t read file');
+        }
 
-        $comic->save();*/
 
         $comic = Comic::create([
             'user_id' => Auth::id(),
-            'title' => $request->title,
-            'description' => $request->description,
-            'cover' => $imageName,
-            'status_id' => $request->comic_status,
+            'title' => $request->session()->pull('title'),
+            'description' => $request->session()->pull('description'),
+            'cover' => $cover,
+            'status_id' => $request->session()->pull('status_id'),
             'adult_content' => $adultContent
         ]);
 
-        //handle genres
-        $selectedGenresId = $request->input('genres');
 
-        foreach ($selectedGenresId as $selectedGenreId) {
+        /* handle extra covers */
+        $extraCover = new ExtraComicCover;
+        $extraBatch = array();
+        foreach ($newExtraCovers as $newExtraCover) {
+            $extraBatch[] = array(
+                'comic_id' => $comic->id,
+                'image' => $newExtraCover
+            );
+
+        }
+
+        $extraCover->insertAll($extraBatch);
+
+
+        /* handle genres */
+        $selectedGenresId = $request->session()->pull('genres');
+        foreach ($selectedGenresId[0] as $selectedGenreId) {
             $comic->genres()->attach($selectedGenreId);
         }
 
-        //handle volumes
-        $volumesInput = $request->input('volume');
+
+        /* handle volumes */
+        $volumesInput = $request->input('volumes', null);
+
+        if(!$volumesInput){
+            $volumesInput = array(
+                0 => array(
+                    'title' => '',
+                    'sequence' => 0,
+                    'chapters' =>  $request->input('chapters')
+                )
+            );
+        }
 
         foreach ($volumesInput as $volumeKey => $volumeInput) {
+            //checking if adding with volumes or not
+            $volumeSequence = (isset($volumeInput['sequence']) && ($volumeInput['sequence']) === 0) ? 0 : $volumeKey + 1;
+
             $volume = Volume::create([
                 'comic_id' => $comic->id,
                 'title' => $volumeInput['title'],
-                'sequence' => $volumeKey + 1
+                'sequence' => $volumeSequence
             ]);
 
-            //handle chapters
-            foreach ($volumeInput['chapter'] as $chapterKey => $chapterInput) {
+            /* handle chapters */
+            foreach ($volumeInput['chapters'] as $chapterKey => $chapterInput) {
                 $chapter = Chapter::create([
                     'volume_id' => $volume->id,
                     'title' => $chapterInput['title'],
                     'sequence' => $chapterKey + 1
                 ]);
 
-                $uploadedZipImages = $request->file('volume.' . $volumeKey . '.chapter.' . $chapterKey . '.chapter_images');
+                if($volumeSequence === 0){
+                    $uploadedZipImages = $request->file('chapters.' . $chapterKey . '.pages');
+                }else{
+                    $uploadedZipImages = $request->file('volumes.' . $volumeKey . '.chapters.' . $chapterKey . '.pages');
+                }
 
+                //dd($uploadedZipImages);
                 if ($uploadedZipImages != null) {//проверка необязательна здесь, так как клиентская и серверная валидации пройдены
-                    /*
-                    **ПРОВЕРКА
-                        Экзотический формат архива, -- form request
-                        Архив запаролен. -- ничего не распаковывает
-                        Многотомный архив. -- ничего не распаковывает
-                        Архив имеет структуру вложенных папок. --- на данный момент распаковываются и вложенные
-                        Архив повредился во время отправки. -- скорее всего, тоже при чтении выдаст ошибку
-
-                    $fullName = $uploadedZipImages->getClientOriginalName();
-                    $fullExtension = '.' . $uploadedZipImages->getClientOriginalExtension();
-                    $archiveName = str_replace($fullExtension, '', $fullName);
-                    $path = public_path() . '/images/test/';
-                    $zipper = new Zipper;
                     try {
-
-                        $zipper->make($uploadedZipImages);
-
-                        $imageNames = $zipper->listFiles('/\.jpg$/i');
-                        usort($imageNames, 'strnatcasecmp');
-                        // var_dump($imageNames);
-
-                        //проверяем, в корне ли изображения, либо же в папке
-                        $zipperFolder = (dirname($imageNames[0]) == $archiveName) ? $archiveName : '';
-                        //echo 'zipperFolder = ' . $zipperFolder;
-                        $actualFolder = (!empty($zipperFolder)) ? $zipperFolder . '/' : '';
-
-                        $resetedImages = $zipper->resetImageNames($actualFolder, $imageNames);
-                        //var_dump('reseted images');
-                        //var_dump($resetedImages);
-                        //TODO если в архиве есть директория с имененм архива, то перенести в корень и распаковать
-                        //проверка: если resetedImages пустое, то ошибка и редирект
-                        $zipper->close();
-
-                        //open for extracting
-
-                        $zipper->make($uploadedZipImages);
-
-                        //throw new ReadFileException('cant read zip');
-                        $zipper->folder($zipperFolder)->extractTo($path, $resetedImages, Zipper::WHITELIST);
-
-                    } catch (ExtractFileException $e) {//ошибка чтения файла при распаковке
-                        $zipper->close();
-                        throw $e;
-                    } catch (\OpenFileException $e) {//ошибка открытия файла
-                        $zipper->close();
-                        throw $e;
-                    }
-                    $zipper->close();
-                    **/
-
-                    try {
-                        $resetedImages = $comicService->storeArchiveData($uploadedZipImages);
+                        //распаковываем и сохраням zip
+                        $resetedImages = $comicService->storeData($uploadedZipImages);
+                        //dd($resetedImages);
                     } catch (\Exception $e) {//ошибка открытия файла
                         DB::rollback();
                         throw $e;
                     }
 
+                    /* handle page images */
                     $imageSequence = 1;
                     $newImages = array();
                     $newImage = new Image;
+
 
                     foreach ($resetedImages as $fileName) {
                         $newImages[] = array(
@@ -190,14 +186,15 @@ class ComicController extends Controller
                     }
 
                     $newImage->insertAll($newImages);
+                }else{
+                    dd('images are empty!');
                 }
             }
         }
-
-        //commit new records
+        /* commit new records */
         DB::commit();
 
-        return redirect('/comic/'.$comic->slug)->with('success','Комикс успешно создан.');
+        return redirect('/comic/'.$comic->slug)->with('success','Congrats! Comic was successful created.');
     }
 
     public function update(Request $request)
@@ -212,21 +209,50 @@ class ComicController extends Controller
 
 
     //show
-    public function showComic(Request $request)
+    public function showComic(Request $request, ComicService $comicService)
     {
         $comicSlug = $request->route('slug');
-        $analyticsData = Analytics::fetchPageviewsForUrl(Period::days(7), '/comic/'.$comicSlug);
-        //dd($analyticsData->toArray());
 
-        //eager loading -> ('volumes.chapters')
-        $comic = Comic::with('volumes.chapters')->where('slug', $comicSlug)->first();
+        $comic = Comic::with('volumes.chapters','extra_covers')->withCount('subscribers')->where('slug', $comicSlug)->first();
+        $comic = $comicService->getPageviewsForComic($comic);
+        $comic = $comicService->getSubscriptionsForComic($comic);
+
         $user = Auth::user();
-        $hasLike = $user->hasLike($comic->id);
+        $isSubscribed = $user->hasSubscription($comic->id);
+        $isSelfComic = $user->hasComic($comic);
+
+
+        $likesCount = DB::table('likes')
+            ->selectRaw('type_id, count(*) as type_count')
+            ->where('comic_id', $comic->id)
+            ->groupBy('type_id')
+            ->get();
+
+        $likesCount = $likesCount->pluck('type_count', 'type_id');
+        $comic->likesCount = $likesCount;
+
+
+        $hasLike = DB::table('likes')
+            ->selectRaw('type_id')
+            ->where('user_id', $user->id)
+            ->where('comic_id', $comic->id)
+            ->first();
+
+        if($hasLike != null){
+            $hasLike = $hasLike->type_id;
+        }
+
+
+        /* similar comics */
+        $relatedComics = $comicService->getSimilar($comic, 6);
 
         if ($comic != null) {
             return view('comic.index', [
                 'comic' => $comic,
+                'isSubscribed' => $isSubscribed,
+                'isSelfComic' => $isSelfComic,
                 'hasLike' => $hasLike,
+                'relatedComics' => $relatedComics
             ]);
         } else {
             return view('errors.404');
@@ -287,6 +313,8 @@ class ComicController extends Controller
             $image['image_comments'] = $image->where('id', $image)->first()
                 ->image_comments;
         }*/
+
+        $curPage = $images->where('sequence', $imageSequence)->first();
 
 
         //next page data
@@ -350,6 +378,7 @@ class ComicController extends Controller
                 'comic' => $comic,
                 'chapterImages' => $images,
                 'nextPage' => $nextPage,
+                'curPage' => $curPage,
                 'prevPage' => $prevPage,
                 'volumeSequence' => $volumeSequence,
                 'chapterSequence' => $chapterSequence,

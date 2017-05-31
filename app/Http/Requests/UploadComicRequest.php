@@ -45,13 +45,8 @@ class UploadComicRequest extends FormRequest
             'title' => 'required',
             'description' => 'required',
             //'cover' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'cover_slide' => 'image|mimes:jpeg,png,jpg|max:2048',
-            'genres' => 'required',
-            'volume' => 'required',
-            //'volume.*.chapter' => 'required',
-            //'volume.*.title' => 'required',
-            //'volume.*.chapter.*.title' => 'required',
-            //'volume.*.chapter.*.chapter_images' => 'required'
+            //'cover_slide' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'genres' => 'required'
         ];
     }
 

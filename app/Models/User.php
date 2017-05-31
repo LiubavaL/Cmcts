@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 use Debugbar;
 
 class User extends Authenticatable
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'password',
         'image',
         'city',
+        'about',
         'country_id',
         'show_adult',
         'is_verified'
@@ -40,15 +42,47 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Comic');
     }
 
+    public function hasComic($comic)
+    {
+        return Auth::id() == $comic->user_id;
+    }
+
+
+    //comic subscriptions
+    public function subscriptions()
+    {
+        return $this->belongsToMany('App\Models\Comic', 'subscriptions');
+    }
+
+    public function subscribe($subscription_id)
+    {
+        return $this->subscriptions()->attach($subscription_id);
+    }
+
+    public function unsubscribe($subscription_id)
+    {
+        return $this->subscriptions()->detach($subscription_id);
+    }
+
+    public function hasSubscription($subscription_id)
+    {
+        foreach($this->subscriptions as $subscription){
+            if($subscription->id == $subscription_id){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //comic likes
     public function likes()
     {
         return $this->belongsToMany('App\Models\Comic', 'likes');
     }
 
-    public function like($comic_id)
+    public function like($comic_id, $type_id)
     {
-        return $this->likes()->attach($comic_id);
+        return $this->likes()->attach($comic_id, ['type_id' => $type_id]);
     }
 
     public function dislike($comic_id)
@@ -56,9 +90,9 @@ class User extends Authenticatable
         return $this->likes()->detach($comic_id);
     }
 
-    public function hasLike($comic_id){
+    public function hasLike($comic_id, $type_id){
         foreach($this->likes as $like){
-            if($like->id == $comic_id){
+            if(($like->id == $comic_id) && in_array($like->pivot->type_id, $type_id)){
                 return true;
             }
         }
@@ -70,6 +104,12 @@ class User extends Authenticatable
     public function followers()
     {
         return $this->belongsToMany('App\Models\User', 'followers', 'user_id', 'follower_id');
+    }
+
+    //following
+    public function following()
+    {
+        return $this->belongsToMany('App\Models\User', 'followers', 'follower_id', 'user_id');
     }
 
     public function follow($user_id)
@@ -123,10 +163,16 @@ class User extends Authenticatable
         return false;
     }
 
-    //comments
+    //page comments
     public function image_comments()
     {
         return $this->hasMany('App\Models\Comment');
+    }
+
+    //comic comments
+    public function comic_comments()
+    {
+        return $this->hasMany('App\Models\ComicComment');
     }
 
 

@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Notifications\NewFollower;
+use App\Services\ProfileService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateSettingsRequest;
 use App\Http\Requests\BlockUserRequest;
 use Illuminate\Support\ViewErrorBag;
 use Illuminate\Support\MessageBag;
-use Image as InterventionImage;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Comic;
 use App\Models\User;
 use App\Models\Country;
@@ -19,8 +18,7 @@ use Debugbar;
 use Validator;
 use Event;
 use App\Events\UserSignedUp;
-use Spatie\Analytics\Period;
-use Analytics;
+use App\Services\ComicService;
 
 class ProfileController extends Controller
 {
@@ -39,31 +37,83 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getProfile(Request $request)
+    public function showProfile(Request $request, ComicService $comicService)
     {
-        $analyticsData = Analytics::fetchPageviewsForUrl(Period::days(7), '/profile');
-        //dd($analyticsData->toArray());
         $userId = $request->route('id');
         $user = null;
         $authUser = Auth::user();
         $isFollowing = false;
+        $isSelfProfile = false;
 
         if($userId){
             $user = User::where('id', $userId)->first();
             $isFollowing = $authUser->isFollowing($user->id, $authUser->id);
         }else{
             $user = $authUser;
+            $isSelfProfile = true;
         }
 
-        $comics = Comic::with('status')->where('user_id', $user->id)->get();
+        $user->load('followers', 'following','subscriptions', 'likes');
+
+        $comics = Comic::with('status','genres')->withCount('comments')->where('user_id', $user->id)->get();
         //$comics = Comic::with('volumes.chapters.images')->where('user_id', Auth::id())->get();
 
-        $notifications = array();
-        //dd($user->toArray());
+
+        $comics = $comicService->getSubscriptionsForComics($comics);
+        $comics = $comicService->getCommentsForComics($comics);
+        $comics = $comicService->getPageviewsForComics($comics);
+
+        $followers = $user->followers->count();
+        $following = $user->following->count();
+
         return view('user.profile', [
             'user' => $user,
             'comics' => $comics,
-            'isFollowing' => $isFollowing
+            'followers' => $followers,
+            'following' => $following,
+            'isFollowing' => $isFollowing,
+            'isSelfProfile' => $isSelfProfile
+        ]);
+    }
+
+    public function showFollowers(Request $request){
+        $userId = $request->route('id', Auth::id());
+
+        //получаем авт юзера с привязанным списком подписчиков
+        $user = User::with(['followers' => function ($query) use ($userId){
+            $query->where('user_id', $userId);
+        }])->where('id', $userId)->first();
+        //оставляем только список подписчиков
+        //$followers = $followers->first();
+
+        return view('user.follow.followers', [
+            'user' => $user
+        ]);
+    }
+
+    public function showFollowing(Request $request){
+        $userId = $request->route('id', Auth::id());
+
+        //получаем авт юзера с привязанным списком подписчиков
+        $user = User::with(['following' => function ($query) use ($userId){
+            $query->where('follower_id', $userId);
+        }])->where('id', $userId)->first();
+
+        //оставляем только список людей, на которых подписан
+        //$following = $following->first()->following->toArray();
+
+
+        return view('user.follow.following', [
+            'user' => $user
+        ]);
+    }
+
+    public function showNotifications(){
+        $user = Auth::user();
+        //dd($user->notifications->first()->data['follower_id']);
+
+        return view('user.notifications.notifications', [
+            'user' => $user
         ]);
     }
 
@@ -84,17 +134,19 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function postSettings(UpdateSettingsRequest $request)
+    public function postSettings(UpdateSettingsRequest $request, ProfileService $profileService)
     {
         $user = Auth::user();
         $activeTab = $request->input('tab');
 
         //general
         $showAdult = ($request->has('show_adult')) ? 1 : 0 ;
+        $email = $request->email;
         //dd($showAdult);
         //account
         $username = $request->input('name');
-        $image = $request->cover;
+        $about = $request->about;
+        $image = $request->avatar;
         $password = $request->input('password');
         $city = $request->input('city');
         $country = $request->input('country');
@@ -102,10 +154,14 @@ class ProfileController extends Controller
 //        dd($request->hasFile('cover'));
 
 
-        Debugbar::info($request->all());
-
         switch ($activeTab){
             case 'general':
+                if($user->email != $email){
+                    $user->email = $email;
+                    $user->is_verified = 0;
+                    $user->save();
+                    $this->sendActivationLink($request);
+                }
                 if($user->show_adult != $showAdult){
                     $user->show_adult = $showAdult;
                     $user->save();
@@ -114,19 +170,11 @@ class ProfileController extends Controller
             case 'account':
                 if($username) $user->name = $username;
                 if($image) {
-                    $storage = Storage::disk('s3');
-                    $imageName = time().'.'.$image->getClientOriginalExtension();
-                    $dirThumb = '/avatars/';
-                    $imgThumb = InterventionImage::make($image)/*
-                        ->resize(300, null, function ($constraint) {$constraint->aspectRatio();})
-                        ->crop(300, 300)*/;
-
-                    $imgThumb = $imgThumb->stream();
-                    $storage->put($dirThumb.$imageName, $imgThumb->__toString(), 'public');
-
+                    $imageName = $profileService->putAvatar($image);
                     $user->image = $imageName;
                 }
                 if($password) $user->password = bcrypt($password);
+                if($about) $user->about = $about;
                 if($city) $user->city = $city;
                 if($country) $user->country_id = $country;
 
@@ -135,9 +183,14 @@ class ProfileController extends Controller
             case 'notifications':;break;
         }
 
-        return redirect()->back()->with('success', 'Изменения успешно сохранены.');
+        return redirect()->back()->with('success', 'Changes saved.');
     }
 
+    /*
+     *
+     * blacklist
+     *
+     */
     public function addToBL(BlockUserRequest $request){
         $usernameToBlockName = 'block_user';
         $usernameToBlock = $request->input($usernameToBlockName);
@@ -145,13 +198,13 @@ class ProfileController extends Controller
         $userToBlock = User::where('name', $usernameToBlock)->first();
 
         if(empty($userToBlock)){
-            $bag = $this->addMessageBag($usernameToBlockName, 'Введенный пользователь не существует.');
+            $bag = $this->addMessageBag($usernameToBlockName, 'User doesn\'t exist.');
 
             return redirect()->back()->with('errors', session()->get('errors', new ViewErrorBag)->put('default', $bag));
         }
 
         if($userToBlock->hasRole('admin')){
-            $bag = $this->addMessageBag($usernameToBlockName, 'Вы не можете добавлять администраторов в черный список.');
+            $bag = $this->addMessageBag($usernameToBlockName, 'You can\'t add administrator to blacklist.');
 
             return redirect()->back()->with('errors', session()->get('errors', new ViewErrorBag)->put('default', $bag));
         }
@@ -160,13 +213,13 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         if($user->id == $userToBlock['id']){
-            $bag = $this->addMessageBag($usernameToBlockName, 'Вы не можете добавить себя в черный список.');
+            $bag = $this->addMessageBag($usernameToBlockName, 'You can\'t add yourself to blacklist.');
 
             return redirect()->back()->with('errors', session()->get('errors', new ViewErrorBag)->put('default', $bag));
         }
 
         if($user->hasInBL($userToBlock['id'])){
-            $bag = $this->addMessageBag($usernameToBlockName, 'Введенный пользователь уже есть в Вашем списке.');
+            $bag = $this->addMessageBag($usernameToBlockName, 'This user was already been saved to you list.');
 
             return redirect()->back()->with('errors', session()->get('errors', new ViewErrorBag)->put('default', $bag));
         }
@@ -186,7 +239,11 @@ class ProfileController extends Controller
         return redirect()->back()->with(['user' => $user, 'activeTab' => $activeTab]);
     }
 
-
+    /*
+     *
+     * follow/unfollow
+     *
+     */
     public function follow(Request $request){
         $userId = $request->route('id');
         $user = Auth::user();
@@ -229,8 +286,15 @@ class ProfileController extends Controller
      * */
     public function sendActivationLink(Request $request){
         Event::fire(new UserSignedUp($request->user()));
+        $request->session()->flash('activationMailSent', true);
 
-        return redirect('/profile')->with('activationMailSent', true);
+        //return redirect()->back()->with('activationMailSent', true);
+    }
+
+    public function getSendActivationLink(Request $request){
+        $this->sendActivationLink($request);
+
+        return redirect()->back();
     }
 
     public function activateUser(Request $request){
@@ -250,7 +314,7 @@ class ProfileController extends Controller
             }
         }
 
-        return redirect('/profile')->with('activated', $activated);
+        return redirect('/settings/general')->with('activated', $activated);
     }
 
     private function getActivation($token){

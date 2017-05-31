@@ -7,7 +7,8 @@ class Chapter extends BaseModel
     protected $fillable = [
         'volume_id',
         'title',
-        'sequence'
+        'sequence',
+        'created_at'
     ];
 
     public function volume()

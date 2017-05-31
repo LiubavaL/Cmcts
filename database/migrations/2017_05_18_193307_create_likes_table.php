@@ -18,8 +18,8 @@ class CreateLikesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('comic_id')->unsigned();
             $table->foreign('comic_id')->references('id')->on('comics')->onDelete('cascade');
-            $table->integer('type')->unsigned();
-            $table->foreign('type')->references('id')->on('like_type')->onDelete('cascade');
+            $table->integer('type_id')->unsigned();
+            $table->foreign('type_id')->references('id')->on('like_type')->onDelete('cascade');
             $table->primary(['user_id', 'comic_id']);
             
             $table->timestamps();

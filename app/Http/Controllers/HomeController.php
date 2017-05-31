@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ComicService;
 use Illuminate\Http\Request;
 use App\Models\Comic;
 use Illuminate\Support\Facades\Mail;
@@ -12,14 +13,18 @@ use Mailgun\Mailgun;
 
 class HomeController extends Controller
 {
+    private $comicService;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ComicService $comicService)
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
+        if(isset($comicService)){
+            $this->comicService = $comicService;
+        }
     }
 
     /**
@@ -39,16 +44,107 @@ FROM
   GROUP BY fio
     Comic::with('likes')->*/
 
-        $comics = DB::table('comics')
+        /*$popularComics = DB::table('comics')
             ->join('likes', 'comics.id', '=', 'likes.comic_id')
             ->leftJoin('users', 'comics.user_id', '=', 'users.id')
             ->groupBy('id')
             ->select(DB::raw('comics.*, count(likes.user_id) as user_count, users.name as author_name, users.image as author_image'))
             ->orderBy('user_count', 'desc')
             ->get();
-        //dd($comics);
 
-        return view('home', ['comics' => $comics]);
+         DB::table('comics')
+            ->orderBy('rating')
+            ->limit(13)
+            ->get();
+
+        $newComics = DB::table('comics')
+            ->latest()
+            ->limit(15)
+            ->get();*/
+        $popularComics = $this->getPopular(13);
+        $newComics = $this->getNew(15);
+        $ongoingComics = $this->getOngoing(11);
+
+        return view('home', [
+            'popularComics' => $popularComics,
+            'newComics' => $newComics,
+            'ongoingComics' => $ongoingComics
+        ]);
+    }
+
+
+    /*
+     * footer links
+     */
+    public function showAbout(){
+        return view('other.about');
+    }
+
+    public function showContact(){
+        return view('other.contact');
+    }
+
+    public function showTerms(){
+        return view('other.terms');
+    }
+
+    public function showHelp(){
+        return view('other.help');
+    }
+
+    /*
+     * header links
+     */
+    public function popularList(){
+        //TODO  pagination
+        $popularComics = $this->getPopular();
+
+        return view('popular', [
+            'popularComics' => $popularComics
+        ]);
+    }
+
+    public function newList(){
+        //TODO  pagination
+        $newComics = $this->getNew();
+
+        return view('new', [
+            'newComics' => $newComics
+        ]);
+    }
+
+    public function ongoingList(){
+        //TODO  pagination
+
+        $ongoingComics = $this->getOngoing();
+
+        return view('ongoing', [
+            'ongoingComics' => $ongoingComics
+        ]);
+    }
+
+    private function getPopular($limit = 0){
+        $popularComics = ($limit > 0 ) ? Comic::with('genres', 'user')->withCount('comments', 'subscribers')->orderBy('rating', 'desc')->take($limit)->get() : Comic::with('genres')->withCount('comments')->orderBy('rating', 'desc')->get();
+
+        $popularComics = $this->comicService->getComicsPreviewData($popularComics);
+
+        return $popularComics;
+    }
+
+    private function getNew($limit = 0){
+        $newComics = ($limit > 0 ) ? Comic::with('genres', 'user')->withCount('comments', 'subscribers')->orderBy('created_at', 'desc')->take($limit)->get() : Comic::with('genres')->withCount('comments')->orderBy('updated_at', 'desc')->get();
+
+        $newComics = $this->comicService->getComicsPreviewData($newComics);
+
+        return $newComics;
+    }
+
+    private function getOngoing($limit = 0){
+        $ongoingComics = ($limit > 0 ) ? Comic::with('genres', 'user')->withCount('comments', 'subscribers')->orderBy('updated_at', 'desc')->take($limit)->get() : Comic::with('genres')->withCount('comments')->orderBy('updated_at', 'desc')->get();
+
+        $ongoingComics = $this->comicService->getComicsPreviewData($ongoingComics);
+
+        return $ongoingComics;
     }
 
     public function testEmail(Request $request){
