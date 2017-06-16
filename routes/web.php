@@ -46,10 +46,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/comic/create', 'ComicController@getUpload');
     Route::get('/comic/create-1', 'ComicController@getUpload1');
     Route::get('/comic/create-2', 'ComicController@getUpload2');
+    Route::get('/comic/{slug}/update', 'ComicController@getUpdate');
 
     Route::post('/comic/create', 'ComicController@postUpload');
     Route::post('/comic/create-1', 'ComicController@postUpload1');
     Route::post('/comic/create-2', 'ComicController@postUpload2');
+    Route::post('/comic/update', 'ComicController@postUpdate');
+    Route::post('/comic/delete', 'AjaxController@delete');
 
     //comic likes
     Route::post('/comic/like', 'AjaxController@like');
@@ -77,7 +80,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 //comic routes
-Route::get('/comic/{slug}', 'ComicController@showComic');
+Route::get('/comic/{slug}', 'ComicController@showComic')->name('show-comic');
 Route::get('/comic/{slug}/{volSequence}/{chSequence}', 'ComicController@showChapter');
 Route::get('/comic/{slug}/{volSequence}/{chSequence}/{imgSequence}', 'ComicController@showImage');
 

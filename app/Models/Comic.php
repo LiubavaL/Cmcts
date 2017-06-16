@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comic extends BaseModel
 {
     use Sluggable;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -18,6 +20,8 @@ class Comic extends BaseModel
         'status_id',
         'created_at'
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Sluggable configuration.
@@ -57,6 +61,14 @@ class Comic extends BaseModel
      public function genres()
     {
         return $this->belongsToMany('App\Models\Genre');
+    }
+    public function hasGenre($genre_id){
+        foreach($this->genres as $genre){
+            if(($genre->id == $genre_id)){
+                return true;
+            }
+        }
+        return false;
     }
 
      public function likes()

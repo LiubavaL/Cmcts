@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('city')->nullable();
             $table->integer('country_id')->nullable()->unsigned();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
-            $table->longText('about')->nullable();
+            $table->longText('about');
             $table->boolean('show_adult')->default(0);
             $table->string('password');
             $table->rememberToken();

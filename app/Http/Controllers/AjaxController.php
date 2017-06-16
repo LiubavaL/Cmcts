@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ComicService;
 use Illuminate\Http\Request;
 use App\Models\Comic;
 use App\Models\ComicComment;
 use App\Models\Comment;
+use App\Notifications\NewComicReaction;
+use App\Notifications\NewComicSubscription;
+use App\Notifications\NewComicResponce;
 use Auth;
 use View;
 use DB;
@@ -57,7 +61,7 @@ class AjaxController extends Controller
     public function feed(Request $request){
         $user = $request->user();
         $notifications = array();
-        $itemsHtml = ' <div class="notification notification_size_s">';
+        $itemsHtml = null;
         $html = '';
 
         if ($user && $request->ajax()){
@@ -66,27 +70,29 @@ class AjaxController extends Controller
             }else{
                 $notifications = $user->notifications;
             }
+            if($notifications->count() > 0){
+                $itemsHtml = '<div class="notification notification_size_s">';
 
-            foreach($notifications as $notification){
-                switch($notification->type){
-                    case 'App\Notifications\NewComicResponce':
-                        $html = View::make('user.notifications.partial.notification.types.new-responce', compact('notification'))->render();
-                        break;
-                    case 'App\Notifications\NewComicReaction':
-                        $html = View::make('user.notifications.partial.notification.types.new-reaction', compact('notification'))->render();
-                        break;
-                    case 'App\Notifications\NewComicSubscription':
-                        $html = View::make('user.notifications.partial.notification.types.new-subscription', compact('notification'))->render();
-                        break;
-                    case 'App\Notifications\NewFollower':
-                        $html = View::make('user.notifications.partial.notification.types.new-follower', compact('notification'))->render();
-                        break;
+                foreach($notifications as $notification){
+                    switch($notification->type){
+                        case 'App\Notifications\NewComicResponce':
+                            $html = View::make('user.notifications.partial.notification.types.new-responce', compact('notification'))->render();
+                            break;
+                        case 'App\Notifications\NewComicReaction':
+                            $html = View::make('user.notifications.partial.notification.types.new-reaction', compact('notification'))->render();
+                            break;
+                        case 'App\Notifications\NewComicSubscription':
+                            $html = View::make('user.notifications.partial.notification.types.new-subscription', compact('notification'))->render();
+                            break;
+                        case 'App\Notifications\NewFollower':
+                            $html = View::make('user.notifications.partial.notification.types.new-follower', compact('notification'))->render();
+                            break;
+                    }
+
+                    $itemsHtml.=$html;
                 }
-
-                $itemsHtml.=$html;
+                $itemsHtml.='</div>';
             }
-            $itemsHtml.='</div>';
-
             return response()->json(array(
                 'status' => 200,
                 'items' => $itemsHtml
@@ -101,17 +107,21 @@ class AjaxController extends Controller
     public function addResponce(Request $request){
         $data = $request->all();
         $responce = $data['responce'];
-        $comicId = $data['comic_id'];
-        $user_id = Auth::id();
+        $comic_id = $data['comic_id'];
+        $user = Auth::user();
 
-        if ($user_id && $request->ajax()) {
+        if ($user && $request->ajax()) {
+            $comic = Comic::where('id', $comic_id)->first();
+
             $comment = new ComicComment;
             $comment->content = $responce;
-            $comment->comic_id = $comicId;
-            $comment->user_id = $user_id;
+            $comment->comic_id = $comic_id;
+            $comment->user_id = $user->id;
 
             $comment->save();
 
+            //TODO поменять user с авторизованного на автора
+            $user->notify(new NewComicResponce($user, $comic));
             $commentHtml = View::make('comic.partial.responces.responce', compact('comment'))->render();
 
             return response()->json(array(
@@ -125,21 +135,24 @@ class AjaxController extends Controller
 
     public function addComment(Request $request){
         $data = $request->all();
-        $imageId = $data['iid'];
+        $image_id = $data['iid'];
+        $comic_id = $data['cid'];
         $commentText = $data['comment'];
-        $user_id = Auth::id();
+        $user = Auth::user();
 
-        if ($user_id && $request->ajax()) {
+        if ($user && $request->ajax()) {
+            $comic = Comic::where('id', $comic_id)->first();
+
             $comment = new Comment;
-            $comment->image_id = $imageId;
+            $comment->image_id = $image_id;
             $comment->content = $commentText;
-            $comment->user_id = $user_id;
+            $comment->user_id = $user->id;
 
             $comment->save();
 
             $commentHtml = View::make('comic.partial.page-controls.image_comment', compact('comment'))->render();
 
-            //$user->notify(new NewComicResponce($user, $comic));
+            $user->notify(new NewComicResponce($user, $comic));
 
             return response()->json(array(
                 'status' => 200,
@@ -151,16 +164,21 @@ class AjaxController extends Controller
     }
 
     //subscription
-    public function subscribe(Request $request)
+    public function subscribe(Request $request, ComicService $comicService)
     {
         $user = Auth::user();
         $comic_id = $request->input('comic_id');
 
         if ($user && $request->ajax()) {
+            $comic = Comic::where('id', $comic_id)->first();
             $user->subscribe($comic_id);
 
-            //$user->notify(new NewComicSubscription($user, $comic));
+            $user->notify(new NewComicSubscription($user, $comic));
             $linkHtml = View::make('comic.partial.subscribe.unsubscribe')->render();
+
+            /* update rating */
+            $comic = Comic::where('id', $comic_id)->first();
+            $comicService->countRating($comic, 'subscribe');
 
             return response()->json(array(
                 'status' => 200,
@@ -171,7 +189,7 @@ class AjaxController extends Controller
         }
     }
 
-    public function unsubscribe(Request $request)
+    public function unsubscribe(Request $request, ComicService $comicService)
     {
         $user = Auth::user();
         $comic_id = $request->input('comic_id');
@@ -179,6 +197,10 @@ class AjaxController extends Controller
         if ($user && $request->ajax()) {
             $user->unsubscribe($comic_id);
             $linkHtml = View::make('comic.partial.subscribe.subscribe')->render();
+
+            /* update rating */
+            $comic = Comic::where('id', $comic_id)->first();
+            $comicService->countRating($comic, 'unsubscribe');
 
             return response()->json(array(
                 'status' => 200,
@@ -190,7 +212,7 @@ class AjaxController extends Controller
     }
 
     //like
-    public function like(Request $request)
+    public function like(Request $request, ComicService $comicService)
     {
         $user = Auth::user();
         $comic_id = $request->input('comic_id');
@@ -206,7 +228,10 @@ class AjaxController extends Controller
 
             $type_count = $comic->likes->count();
 
-            //$user->notify(new NewComicReaction($user, $comic));
+            /* add rating */
+            $comicService->countRating($comic, 'like', $type_id);
+
+            $user->notify(new NewComicReaction($user, $comic));
 
             return response()->json(array(
                 'status' => 200,
@@ -223,11 +248,30 @@ class AjaxController extends Controller
         $comic_id = $request->input('comic_id');
 
         if ($user && $request->ajax()) {
+            $comic = Comic::where($comic_id)->first();
             $user->dislike($comic_id);
-            //$user->notify(new NewComicReaction($user, $comic));
+            $user->notify(new NewComicReaction($user, $comic));
 
             return response()->json(array(
                 'status' => 200
+            ));
+        }else{
+            return redirect()->back();
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        $user = Auth::user();
+        $comic_id = $request->input('comic_id');
+
+        if ($user && $request->ajax()) {
+            $comic = Comic::where('id', $comic_id)->first();
+            $comic->delete();
+
+            return response()->json(array(
+                'status' => 200,
+                'redirect_url' => '/profile/'.$user->id
             ));
         }else{
             return redirect()->back();

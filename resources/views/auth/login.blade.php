@@ -4,7 +4,7 @@
 <div class="signin">
     <div class="signin__title">
         <h2 class="title title_theme_auth">Log in to
-            <svg class="title__i-logo"><use xlink:href="assets/images/icon.svg#icon_logo"></use></svg>
+            <svg class="title__i-logo"><use xlink:href="/images/icon.svg#icon_logo"></use></svg>
         </h2>
     </div>
     <form role="form" method="POST" action="{{ url('/login') }}">
@@ -20,7 +20,7 @@
                 <input type="password" value="" name="password" placeholder="Password" class="field__input" />
             </div>
             <a href="{{ url('/password/reset') }}" title="Forgot password?" class="signin__forgot">
-                <svg class="signin__i-forgot"><use xlink:href="assets/images/icon.svg#icon_question"></use></svg>
+                <svg class="signin__i-forgot"><use xlink:href="/images/icon.svg#icon_question"></use></svg>
             </a>
         </div>
         <div class="signin__controls">

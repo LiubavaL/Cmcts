@@ -64,8 +64,8 @@ class NewComicReaction extends Notification
     public function toArray($notifiable)
     {
         return [
-            'rater_id' => $this->subscriptor->id,
-            'rater_name' => $this->subscriptor->name,
+            'rater_id' => $this->rater->id,
+            'rater_name' => $this->rater->name,
             'comic_slug' => $this->comic->slug,
             'comic_title' => $this->comic->title,
         ];

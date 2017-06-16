@@ -4,7 +4,7 @@
     <div class="index">
         @if (Auth::guest())
             <div class="index__promo">
-                <div class="promo promo_theme_bubble-gum">
+                <div class="promo promo_theme_bubble-gum promo_hidden" id="promo">
                     <svg class="promo__close"><use xlink:href="/images/icon.svg#icon_close"></use></svg>
                     <div class="promo__title">
                         <h2 class="title title_theme_promo">Best place for comic creators</h2>
@@ -19,45 +19,47 @@
                 <h2 class="title title_theme_header">Popular</h2>
             </div>
             <div class="index__grid">
-                <div class="index__col col-2">
-                    <div class="index__preview-card">
-                        @include('comic.partial.preview.l', ['user' => $popularComics[0]->user, 'comic' => $popularComics->shift()])
-                    </div>
-                </div>
-                <div class="index__col col-2">
-                    <div class="index__row">
-                        @foreach($popularComics->splice(0, 2) as $popularComic)
-                            @include('comic.partial.preview.m', ['comic' => $popularComic, 'user' => $popularComic->user])
-                        @endforeach
-                    </div>
-                    <div class="index__row">
-                        @foreach($popularComics->splice(0, 2) as $popularComic)
-                            @include('comic.partial.preview.m', ['comic' => $popularComic, 'user' => $popularComic->user])
-                        @endforeach
-                    </div>
-                </div>
-                <div class="index__col col-2">
-                    <div class="index__row">
-                        @foreach($popularComics->splice(0, 3) as $popularComic)
-                            @include('comic.partial.preview.s', ['comic' => $popularComic, 'user' => $popularComic->user])
-                        @endforeach
-                    </div>
-                    <div class="index__row">
-                        @foreach($popularComics->splice(0, 3) as $popularComic)
-                            @include('comic.partial.preview.s', ['comic' => $popularComic, 'user' => $popularComic->user])
-                        @endforeach
-                    </div>
-                    <div class="index__row">
-                        @foreach($popularComics->splice(0, 2) as $popularComic)
-                            @include('comic.partial.preview.s', ['comic' => $popularComic, 'user' => $popularComic->user])
-                        @endforeach
+                @if($popularComics->isNotEmpty())
+                    <div class="index__col col-2">
                         <div class="index__preview-card">
-                            <a href="/popular" class="button button_theme_more button_theme_more_size_s">more
-                                <svg class="button__i-more"><use xlink:href="/images/icon.svg#icon_arrow"></use></svg>
-                            </a>
+                            @include('comic.partial.preview.l', ['user' => $popularComics[0]->user, 'comic' => $popularComics->shift()])
                         </div>
                     </div>
-                </div>
+                    <div class="index__col col-2">
+                        <div class="index__row">
+                            @foreach($popularComics->splice(0, 2) as $popularComic)
+                                @include('comic.partial.preview.m', ['comic' => $popularComic, 'user' => $popularComic->user])
+                            @endforeach
+                        </div>
+                        <div class="index__row">
+                            @foreach($popularComics->splice(0, 2) as $popularComic)
+                                @include('comic.partial.preview.m', ['comic' => $popularComic, 'user' => $popularComic->user])
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="index__col col-2">
+                        <div class="index__row">
+                            @foreach($popularComics->splice(0, 3) as $popularComic)
+                                @include('comic.partial.preview.s', ['comic' => $popularComic, 'user' => $popularComic->user])
+                            @endforeach
+                        </div>
+                        <div class="index__row">
+                            @foreach($popularComics->splice(0, 3) as $popularComic)
+                                @include('comic.partial.preview.s', ['comic' => $popularComic, 'user' => $popularComic->user])
+                            @endforeach
+                        </div>
+                        <div class="index__row">
+                            @foreach($popularComics as $popularComic)
+                                @include('comic.partial.preview.s', ['comic' => $popularComic, 'user' => $popularComic->user])
+                            @endforeach
+                            <div class="index__preview-card">
+                                <a href="/popular" class="button button_theme_more button_theme_more_size_s">more
+                                    <svg class="button__i-more"><use xlink:href="/images/icon.svg#icon_arrow"></use></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
         <div class="index__new">
@@ -65,12 +67,14 @@
                 <h2 class="title title_theme_header">New</h2>
             </div>
             <div class="index__grid index__grid_type_new index__grid_hidden">
-                @foreach($newComics as $newComic)
-                    <div class="index__preview-card">
-                        @include('comic.partial.preview.s', ['comic' => $newComic, 'user' => $newComic->user])
-                    </div>
+                @if($newComics->isNotEmpty())
+                    @foreach($newComics as $newComic)
+                        <div class="index__preview-card">
+                            @include('comic.partial.preview.s', ['comic' => $newComic, 'user' => $newComic->user])
+                        </div>
 
-                @endforeach
+                    @endforeach
+                @endif
                 <div class="index__preview-card">
                     <a href="/new" class="button button_theme_more button_theme_more_size_s">more
                         <svg class="button__i-more"><use xlink:href="/images/icon.svg#icon_arrow"></use></svg>
@@ -83,18 +87,24 @@
                 <h2 class="title title_theme_header">Latest Releases</h2>
             </div>
             <div class="index__grid index__grid_type_ongoing">
-                @foreach($ongoingComics->chunk(6) as $ongoingComicChunk)
-                    <div class="index__row">
-                        @foreach ($ongoingComicChunk as $ongoingComic)
-                            @include('comic.partial.preview.m', ['comic' => $ongoingComic, 'user' => $ongoingComic->user])
-                        @endforeach
-                    </div>
-                @endforeach
-                <div class="index__preview-card">
-                    <a href="/ongoing" class="button button_theme_more button_theme_more_size_m">more
-                        <svg class="button__i-more"><use xlink:href="/images/icon.svg#icon_arrow"></use></svg>
-                    </a>
-                </div>
+                @if($ongoingComics->isNotEmpty())
+                    @foreach($ongoingComics->chunk(6) as $ongoingComicChunk)
+                        <div class="index__row">
+                            @foreach ($ongoingComicChunk as $ongoingComic)
+                                @include('comic.partial.preview.m', ['comic' => $ongoingComic, 'user' => $ongoingComic->user])
+
+                                @if($loop->parent->last && $loop->last)
+                                    <div class="index__preview-card">
+                                        <a href="/ongoing" class="button button_theme_more button_theme_more_size_m">more
+                                            <svg class="button__i-more"><use xlink:href="/images/icon.svg#icon_arrow"></use></svg>
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endforeach
+                @endif
+
             </div>
         </div>
     </div>

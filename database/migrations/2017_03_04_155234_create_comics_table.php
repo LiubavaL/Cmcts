@@ -20,7 +20,7 @@ class CreateComicsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('title', 255);
             $table->string('slug');
-            $table->string('description');
+            $table->longText('description');
             $table->string('cover');
             $table->integer('status_id')->unsigned();
             $table->foreign('status_id')->references('id')->on('comic_statuses')->onDelete('cascade');
@@ -28,6 +28,7 @@ class CreateComicsTable extends Migration
             $table->integer('rating');
             $table->integer('view_count')->default(0)->unsigned();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

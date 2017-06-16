@@ -16,11 +16,33 @@
     <link rel="manifest" href="/manifest.json">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <meta name="description" content="">
-    <meta name="keywords" content="">
-    <!-- CSRF Token -->
+    <meta name="keywords" content="comics,art,drawing,gallery">
+    @if(Route::currentRouteName() == 'show-comic')
+        <meta property="og:url"           content="{{Request::url()}}" />
+        <meta property="og:type"          content="comic" />
+        <meta property="og:title"         content="{{$comic->title}}" />
+        <meta property="og:description"   content="{{$comic->description}}" />
+        <meta property="og:image"         content="{{get_s3_bucket().get_s3_cover_path('m').$comic->cover}}" />
+        <meta name="twitter:title" content="{{$comic->title}}">
+        <meta name="twitter:description" content="{{$comic->description}}">
+        <meta name="twitter:image" content="{{get_s3_bucket().get_s3_cover_path('m').$comic->cover}}">
+        <meta name="twitter:card" content="summary_large_image">
+
+        <!--  Non-Essential, But Recommended -->
+        <meta property="og:site_name" content="{{ config('app.name', 'Laravel') }}">
+        <meta name="twitter:image:alt" content="Comic {{$comic->title}}">
+    @endif
+
+        <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="/css/app.min.css" rel="stylesheet">
+
+        <script src="https://apis.google.com/js/platform.js" async defer>
+            {lang: 'en'}
+        </script>
+        <script type="text/javascript" src="https://vk.com/js/api/share.js?94" charset="windows-1251"></script>
+
 </head>
 
 <body class="page">
@@ -68,11 +90,11 @@
                 </a>
                 <a
                     @if(isset($userComics) && $userComics->count() > 0)
-                        href="#add-comic"
+                        href="#add-comic" id="add-comic-form" data-effect="mfp-zoom-in"
                     @else
                         href="/comic/create-1"
                     @endif
-                    id="add-comic-form" data-effect="mfp-zoom-in" class="header__link-t">
+                     class="header__link-t">
                     <svg class="header__icon"><use xlink:href="/images/icon.svg#icon_add_2"></use></svg>
                 </a>
                 <a href="#" id="show-feed" class="header__link-t">
@@ -137,11 +159,13 @@
                 <div class="field field_font_xl">
                     <input type="text" name="search" placeholder="Search for Author or Comic" class="field__input" />
                 </div>
-                <div class="loader loader_size_s" style="display:none">
-                    <div class="loader__circle-group">
-                        <div id="circle_1" class="loader__circle loader__circle_1"></div>
-                        <div id="circle_2" class="loader__circle loader__circle_2"></div>
-                        <div id="circle_3" class="loader__circle loader__circle_3"></div>
+                <div class="search__loader" style="display: none">
+                    <div class="loader loader_size_l">
+                        <div class="loader__circle-group">
+                            <div id="circle_1" class="loader__circle loader__circle_1"></div>
+                            <div id="circle_2" class="loader__circle loader__circle_2"></div>
+                            <div id="circle_3" class="loader__circle loader__circle_3"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="search__result-list">
@@ -163,15 +187,15 @@
                     <div class="add-comic__text">or</div>
                 </div>
                 <div class="add-comic__col">
-                    <a href="{{url('comic/update')}}" class="add-comic__link">
+                    <a href="#" class="add-comic__link">
                         <svg class="add-comic__i-update"><use xlink:href="/images/icon.svg#icon_comics"></use></svg>
                         <h2 class="title title_theme_header">Update Comic</h2>
                     </a>
                     <div class="select select_theme_light select_size_l">
-                        <select style="width: 100%" class="select__select-hidden">
+                        <select id="update-comic" style="width: 100%" class="select__select-hidden">
                             @if(!empty($userComics))
                                 @foreach($userComics as $userComic)
-                                    <option value="{{$userComic->slug}}" data-image="{{get_image_path($userComic->cover).$userComic->cover}}" class="select__option-hidden">{{$userComic->title}}</option>
+                                    <option value="{{url('comic/'.$userComic->slug.'/update')}}" data-image="{{get_s3_bucket().get_s3_cover_path('s').$userComic->cover}}" class="select__option-hidden">{{$userComic->title}}</option>
                                 @endforeach
                             @endif
                         </select>

@@ -1,6 +1,6 @@
 <div class="search__result-item">
     <div class="search__col">
-        <img src="{{get_image_path($comic->cover).$comic->cover}}" class="search__cover" alt="{{$comic->title}}" role="presentation"
+        <img src="{{get_s3_bucket().get_s3_cover_path('l').$comic->cover}}" class="search__cover" alt="{{$comic->title}}" role="presentation"
                 />
     </div>
     <div class="search__col">

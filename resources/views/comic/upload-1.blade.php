@@ -14,7 +14,7 @@
                         <div class="add-comic-step-1__button">
                             @include('errors.partial.validation', ['errors'=>$errors, 'name'=>'cover'])
 
-                            <label href="#" class="button button_theme_add-cover" for="cover">
+                            <label class="button button_theme_add-cover" for="cover">
                                 <img width="100%" class="cropped-img" alt="" role="presentation" src=""
                                         />
                                 <svg class="button__i-add"><use xlink:href="/images/icon.svg#icon_plus"></use></svg>
@@ -89,7 +89,7 @@
                             <div class="field field_font_l">{{-- field_theme_error--}}
                                 @include('errors.partial.validation', ['errors'=>$errors, 'name'=>'title'])
 
-                                <input type="text" name="title" value="{{old('title')}}" placeholder="Title" class="field__input" />
+                                <input type="text" maxlength="255" name="title" value="{{old('title')}}" placeholder="Title" class="field__input" />
                             </div>
                             {{--<div class="alert alert_theme_error">
                                 <svg class="alert__icon"><use xlink:href="/images/icon.svg#icon_error"></use></svg>

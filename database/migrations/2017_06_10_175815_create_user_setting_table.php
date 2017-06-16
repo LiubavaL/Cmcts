@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateImageComments extends Migration
+class CreateUserSettingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateImageComments extends Migration
      */
     public function up()
     {
-        Schema::create('image-comments', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->integer('image_id')->unsigned();
-            $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
+        Schema::create('user_setting', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('hidden_by')->unsigned()->nullable();
-            $table->foreign('hidden_by')->references('id')->on('users')->onDelete('cascade');
-            $table->string('content', 255);
+
+            $table->integer('setting_id')->unsigned();
+            $table->foreign('setting_id')->references('id')->on('settings')->onDelete('cascade');
+
+            $table->primary(['user_id', 'setting_id']);
 
             $table->timestamps();
         });
@@ -36,7 +34,7 @@ class CreateImageComments extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('image-comments');
+        Schema::dropIfExists('user_setting');
         Schema::enableForeignKeyConstraints();
     }
 }

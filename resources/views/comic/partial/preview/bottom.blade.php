@@ -6,14 +6,14 @@
     <svg class="preview-card__i-coms"><use xlink:href="/images/icon.svg#icon_comments"></use></svg>
     <div class="preview-card__count">{{Count::formatCut($comic->comments_count)}}</div>
 </div>
-@if(Auth::id() == $user->id)
+@if(!Auth::id() || Auth::id() == $user->id)
     <div class="preview-card__col">
         <svg class="preview-card__i-favs"><use xlink:href="/images/icon.svg#icon_favorites"></use></svg>
         <span class="preview-card__count">{{Count::formatCut($comic->subscribers_count)}}</span>
     </div>
 @else
-    <a href="#" class="preview-card__col">
-        <svg class="preview-card__i-favs"><use xlink:href="/images/icon.svg#icon_favorites"></use></svg>
+    <a href="#" data-cid="{{$comic->id}}" class="preview-card__col">
+        <svg class="preview-card__i-favs{{(!empty($authUser) && $authUser->hasSubscription($comic->id)) ? ' preview-card__i-favs_active':''}}"><use xlink:href="/images/icon.svg#icon_favorites"></use></svg>
         <span class="preview-card__count">{{Count::formatCut($comic->subscribers_count)}}</span>
     </a>
 @endif

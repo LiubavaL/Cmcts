@@ -43,7 +43,7 @@
                             <div class="profile__count">{{$following}}</div>
                         </div>
                     </div>
-                    <div class="profile__about">{{$user->about}}</div>
+                    <div class="profile__about">@if($user->about){{$user->about}} @else No user information provided. @endif</div>
                     <div class="profile__follow">
                         @if($user->id != Auth::id())
                             @if ($isFollowing)

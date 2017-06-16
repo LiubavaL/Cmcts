@@ -61,9 +61,9 @@ FROM
             ->latest()
             ->limit(15)
             ->get();*/
-        $popularComics = $this->getPopular(13);
+        $popularComics = $this->getPopular(14);
         $newComics = $this->getNew(15);
-        $ongoingComics = $this->getOngoing(11);
+        $ongoingComics = $this->getOngoing(12);
 
         return view('home', [
             'popularComics' => $popularComics,
@@ -127,6 +127,7 @@ FROM
         $popularComics = ($limit > 0 ) ? Comic::with('genres', 'user')->withCount('comments', 'subscribers')->orderBy('rating', 'desc')->take($limit)->get() : Comic::with('genres')->withCount('comments')->orderBy('rating', 'desc')->get();
 
         $popularComics = $this->comicService->getComicsPreviewData($popularComics);
+        $popularComics = $this->comicService->checkMatureComics($popularComics);
 
         return $popularComics;
     }
@@ -135,6 +136,7 @@ FROM
         $newComics = ($limit > 0 ) ? Comic::with('genres', 'user')->withCount('comments', 'subscribers')->orderBy('created_at', 'desc')->take($limit)->get() : Comic::with('genres')->withCount('comments')->orderBy('updated_at', 'desc')->get();
 
         $newComics = $this->comicService->getComicsPreviewData($newComics);
+        $newComics = $this->comicService->checkMatureComics($newComics);
 
         return $newComics;
     }
@@ -143,6 +145,7 @@ FROM
         $ongoingComics = ($limit > 0 ) ? Comic::with('genres', 'user')->withCount('comments', 'subscribers')->orderBy('updated_at', 'desc')->take($limit)->get() : Comic::with('genres')->withCount('comments')->orderBy('updated_at', 'desc')->get();
 
         $ongoingComics = $this->comicService->getComicsPreviewData($ongoingComics);
+        $ongoingComics = $this->comicService->checkMatureComics($ongoingComics);
 
         return $ongoingComics;
     }

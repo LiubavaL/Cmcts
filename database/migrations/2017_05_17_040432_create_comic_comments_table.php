@@ -20,7 +20,9 @@ class CreateComicCommentsTable extends Migration
             $table->foreign('comic_id')->references('id')->on('comics')->onDelete('cascade');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('content');
+            $table->integer('hidden_by')->unsigned()->nullable();
+            $table->foreign('hidden_by')->references('id')->on('users')->onDelete('cascade');
+            $table->longText('content');
 
             $table->timestamps();
         });

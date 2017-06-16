@@ -1,13 +1,13 @@
+@if(!$comics->isNotEmpty() && !$isSelfProfile || (!$comics->isNotEmpty() && !$addable))
+    <div class="profile__none">No comics has been added yet.</div>
+@endif
+
 <div class="profile__grid">
-    @forelse ( $comics as $comic )
+    @foreach ( $comics as $comic )
         <div class="profile__preview-card">
             @include('comic.partial.preview.xm', ['comic' => $comic, 'user' => $user])
         </div>
-    @empty
-        @if(!$isSelfProfile || (!$comics->isNotEmpty() && !$addable))
-            <div class="profile__empty-text">No comics has been added yet.</div>
-        @endif
-    @endforelse
+    @endforeach
     @if($isSelfProfile && !empty($comics) && $addable)
         <div class="profile__preview-card">
             <div class="profile__add-comic">

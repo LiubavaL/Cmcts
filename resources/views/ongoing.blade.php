@@ -12,9 +12,7 @@
             </div>
             <div class="popular__grid">
                 @foreach($ongoingComics as $ongoingComic)
-                    @if($authUser->show_adult || !$ongoingComic->adult_content)
-                        @include('comic.partial.preview.m', ['comic' => $ongoingComic, 'user' => $ongoingComic->user])
-                    @endif
+                    @include('comic.partial.preview.m', ['comic' => $ongoingComic, 'user' => $ongoingComic->user])
                 @endforeach
             </div>
         </div>

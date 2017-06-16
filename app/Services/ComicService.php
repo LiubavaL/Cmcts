@@ -7,10 +7,12 @@ use App\Exceptions\ExtractFileException;
 use App\Exceptions\OpenFileException;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Analytics\Period;
+use Auth;
 use Analytics;
 use App\Facades\Cover;
 
 class ComicService {
+
     public function storeData($uploadedFile){
         $imagesName = null;
 
@@ -206,8 +208,65 @@ class ComicService {
         return $similarComics;
     }
 
-    public function hasLike(){
+    public function getLikeScore($type_id){
+        $score = 0;
 
+        switch($type_id){
+            case '1':
+                $score = 5;
+                break;
+            case '2':
+                $score = 3;
+                break;
+            case '3':
+                $score = 1;
+                break;
+        }
+
+        return $score;
+    }
+
+    public function getSubscribeScore($isSubscribe){
+        $score = ($isSubscribe) ? 4 : (-4);
+
+        return $score;
+    }
+
+    public function countRating($comic, $eventType, $type_param = null){
+        $score = 0;
+
+        switch ($eventType){
+            case 'like':
+                $score = $this->getLikeScore($type_param);
+                break;
+            case 'subscribe':
+                $score = $this->getSubscribeScore(true);
+                break;
+            case 'unsubscribe':
+                $score = $this->getSubscribeScore(false);
+                break;
+        }
+
+        $comic->rating += $score;
+        $comic->save();
+    }
+
+    public function checkMatureComic($authUser,$comic){
+        if(!$authUser ||
+            ($authUser->show_adult
+                || $comic->adult_content !== 1
+                || $comic->user_id == $authUser->id)){
+            return true;
+        }
+        return false;
+    }
+
+    public function checkMatureComics($comics){
+        $authUser = Auth::user();
+        $checkedComics = $comics->filter(function ($comic, $key) use($authUser) {
+            if($this->checkMatureComic($authUser, $comic)) return $comic;
+        });
+        return $checkedComics->values();
     }
 
 }

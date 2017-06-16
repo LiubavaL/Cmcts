@@ -48,10 +48,10 @@ class Handler extends ExceptionHandler
     {
         switch ($exception){
             case ($exception instanceof ExtractFileException):
-                return redirect()->back()->with('success', 'Ошибка в архиве!');
+                return redirect()->back()->with('success', 'Incorrect archive. Try another.');
                 break;
             case ($exception instanceof OpenFileException):
-                return redirect()->back()->with('success', 'невозможно открыть архив!');
+                return redirect()->back()->with('success', 'Can\'t open archive.');
                 break;
             default:
                 return parent::render($request, $exception);
@@ -66,13 +66,9 @@ class Handler extends ExceptionHandler
     protected function renderException(Request $request, Exception $exception){//TODO можно удлаить
         switch ($exception){
             case ($exception instanceof ExtractFileException):
-                Debugbar::info("ERROR: ExtractFileException");
-
                 return redirect()->back()->with('success', 'Ошибка в архиве!');
                 break;
             case ($exception instanceof OpenFileException):
-                Debugbar::info("ERROR: OpenFileException");
-
                 return redirect()->back()->with('success', 'невозможно открыть архив!');
                 break;
         }
@@ -88,7 +84,10 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+            return response()->json([
+                'status' => 401,
+                'redirect_url' => '/login'
+                ]);
         }
 
         return redirect()->guest('login');

@@ -83,8 +83,8 @@
                 </div>
                 <div class="add-comic-step-2__controls">
                 <div class="controls controls_centered">
-                    <a href="{{url()->previous()}}" class="button button_theme_bubble-gum-light button_size_l">Back</a>
-                    <button type="submit" class="button button_theme_bubble-gum button_size_l">Upload</button>
+                    <a href="/comic/create-1" class="button button_theme_bubble-gum-light button_size_l">Back</a>
+                    <button id="upload" type="submit" class="button button_theme_bubble-gum button_size_l">Upload</button>
                 </div>
             </div>
             </form>

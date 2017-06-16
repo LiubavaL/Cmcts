@@ -12,14 +12,10 @@
             </div>
             <div class="popular__grid">
                 @foreach($popularComics->splice(0, 3) as $popularComic)
-                    @if($authUser->show_adult || !$popularComic->adult_content)
-                        @include('comic.partial.preview.l', ['comic' => $popularComic, 'user' => $popularComic->user])
-                    @endif
+                    @include('comic.partial.preview.l', ['comic' => $popularComic, 'user' => $popularComic->user])
                 @endforeach
                 @foreach($popularComics as $popularComic)
-                    @if($authUser->show_adult || !$popularComic->adult_content)
-                        @include('comic.partial.preview.m', ['comic' => $popularComic, 'user' => $popularComic->user])
-                    @endif
+                    @include('comic.partial.preview.m', ['comic' => $popularComic, 'user' => $popularComic->user])
                 @endforeach
             </div>
         </div>

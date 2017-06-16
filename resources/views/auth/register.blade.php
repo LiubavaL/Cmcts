@@ -4,7 +4,7 @@
 <div class="signup">
     <div class="signup__title">
         <h2 class="title title_theme_auth">Join
-            <svg class="title__i-logo"><use xlink:href="assets/images/icon.svg#icon_logo"></use></svg>
+            <svg class="title__i-logo"><use xlink:href="/images/icon.svg#icon_logo"></use></svg>
         </h2>
     </div>
     <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">

@@ -65,7 +65,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(Request $request, array $data)
+    protected function create(array $data)
     {
         $user = User::create([
             'name' => $data['name'],
@@ -77,9 +77,9 @@ class RegisterController extends Controller
             $userRole = Role::whereName('user')->first();
             $user->assignRole($userRole);
 
-            Event::fire(new UserSignedUp());
+            Event::fire(new UserSignedUp($user));
 
-            $request->session()->flash('activationMailSent', true);
+            //$request->session()->flash('activationMailSent', true);
 
             return $user;
         }else new \Exception("Failed to create user");

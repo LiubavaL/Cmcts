@@ -31,44 +31,48 @@ class ComicController extends Controller
 {
 
     //CRUD
-    public function getUpload1(){
+    public function getUpload1()
+    {
         return view('comic.upload-1', ['comicStatuses' => ComicStatus::all(), 'genres' => Genre::all()]);
     }
 
-    public function getUpload2(){
+    public function getUpload2()
+    {
         return view('comic.upload-2');
     }
 
-    public function postUpload1(UploadComicRequest $request){
-        if(!$request->session()->has('title')){
-            session(['title'=> $request->title]);
+    public function postUpload1(UploadComicRequest $request)
+    {
+        if (!$request->session()->has('title')) {
+            session(['title' => $request->title]);
         }
-        if(!$request->session()->has('description')){
-            session(['description'=> $request->description]);
+        if (!$request->session()->has('description')) {
+            session(['description' => $request->description]);
         }
-        if(!$request->session()->has('status_id')){
-            session(['status_id'=> $request->comic_status]);
+        if (!$request->session()->has('status_id')) {
+            session(['status_id' => $request->comic_status]);
         }
-        if(!$request->session()->has('single')){
-            session(['single'=> $request->single]);
+        if (!$request->session()->has('single')) {
+            session(['single' => $request->single]);
         }
-        if(!$request->session()->has('adult_content')){
-            session(['adult_content'=> $request->adult_content]);
+        if (!$request->session()->has('adult_content')) {
+            session(['adult_content' => $request->adult_content]);
         }
-        if(!$request->session()->has('cover')){
-            session(['cover'=> $request->cover]);
+        if (!$request->session()->has('cover')) {
+            session(['cover' => $request->cover]);
         }
-        if(!$request->session()->has('genres')){
-            Session::push('genres',  collect($request->input('genres')));
+        if (!$request->session()->has('genres')) {
+            Session::push('genres', collect($request->input('genres')));
         }
-        if(!$request->session()->has('extra_covers')){
+        if (!$request->session()->has('extra_covers')) {
             Session::push('extra_covers', collect($request->input('extra-cover')));
         }
 
         return redirect('/comic/create-2');
     }
 
-    public function postUpload2(Upload2ComicRequest $request, ComicService $comicService){
+    public function postUpload2(Upload2ComicRequest $request, ComicService $comicService)
+    {
         //handle cover image upload
         $s3 = Storage::disk('s3');
         $adultContent = ($request->session()->pull('adult_content')) ? 1 : 0;
@@ -78,16 +82,15 @@ class ComicController extends Controller
         //start transaction
         DB::beginTransaction();
 
-        if(session('cover')){
+        if (session('cover')) {
             $cover = $comicService->putCover($request->session()->pull('cover'), $s3);
-        }else{
-            // throw new ExtractFileException('Can\'t read file');
+        } else {
+            throw new \Exception('Can\'t find cover');
         }
-        if(session('extra_covers')){
+
+        if (session('extra_covers')) {
             $exCovers = $request->session()->pull('extra_covers');
             $newExtraCovers = $comicService->putExtraCovers($exCovers[0], $s3);
-        }else{
-            // throw new ExtractFileException('Can\'t read file');
         }
 
 
@@ -125,12 +128,12 @@ class ComicController extends Controller
         /* handle volumes */
         $volumesInput = $request->input('volumes', null);
 
-        if(!$volumesInput){
+        if (!$volumesInput) {
             $volumesInput = array(
                 0 => array(
                     'title' => '',
                     'sequence' => 0,
-                    'chapters' =>  $request->input('chapters')
+                    'chapters' => $request->input('chapters')
                 )
             );
         }
@@ -153,9 +156,9 @@ class ComicController extends Controller
                     'sequence' => $chapterKey + 1
                 ]);
 
-                if($volumeSequence === 0){
+                if ($volumeSequence === 0) {
                     $uploadedZipImages = $request->file('chapters.' . $chapterKey . '.pages');
-                }else{
+                } else {
                     $uploadedZipImages = $request->file('volumes.' . $volumeKey . '.chapters.' . $chapterKey . '.pages');
                 }
 
@@ -186,7 +189,7 @@ class ComicController extends Controller
                     }
 
                     $newImage->insertAll($newImages);
-                }else{
+                } else {
                     dd('images are empty!');
                 }
             }
@@ -194,19 +197,32 @@ class ComicController extends Controller
         /* commit new records */
         DB::commit();
 
-        return redirect('/comic/'.$comic->slug)->with('success','Congrats! Comic was successful created.');
+        return redirect('/comic/' . $comic->slug)->with('success', 'Congrats! Comic was successful created.');
     }
 
-    public function update(Request $request)
+    public function getUpdate(Request $request)
     {
+        $comicSlug = $request->route('slug');
+        $user = Auth::user();
+        $comic = Comic::with('volumes.chapters', 'extra_covers')->where('slug', $comicSlug)->first();
 
+        if ($user->hasComic($comic)) {
+            if ($comic != null) {
+                return view('comic.update', [
+                    'comic' => $comic,
+                    'comicStatuses' => ComicStatus::all(),
+                    'genres' => Genre::all()
+                ]);
+            } else {
+                return view('errors.404');
+            }
+        } else {
+            return view('errors.403');
+        }
     }
 
-    public function delete(Request $request)
-    {
-
+    public function postUpdate(Request $request){
     }
-
 
     //show
     public function showComic(Request $request, ComicService $comicService)
@@ -218,9 +234,23 @@ class ComicController extends Controller
         $comic = $comicService->getSubscriptionsForComic($comic);
 
         $user = Auth::user();
-        $isSubscribed = $user->hasSubscription($comic->id);
-        $isSelfComic = $user->hasComic($comic);
+        $isSubscribed = null;
+        $isSelfComic = null;
+        $hasLike = null;
 
+        if($user){
+            $isSubscribed = $user->hasSubscription($comic->id);
+            $isSelfComic = $user->hasComic($comic);
+
+            $hasLike = DB::table('likes')
+                ->selectRaw('type_id')
+                ->where('user_id', $user->id)
+                ->where('comic_id', $comic->id)
+                ->first();
+        }
+        if($hasLike != null){
+            $hasLike = $hasLike->type_id;
+        }
 
         $likesCount = DB::table('likes')
             ->selectRaw('type_id, count(*) as type_count')
@@ -230,18 +260,6 @@ class ComicController extends Controller
 
         $likesCount = $likesCount->pluck('type_count', 'type_id');
         $comic->likesCount = $likesCount;
-
-
-        $hasLike = DB::table('likes')
-            ->selectRaw('type_id')
-            ->where('user_id', $user->id)
-            ->where('comic_id', $comic->id)
-            ->first();
-
-        if($hasLike != null){
-            $hasLike = $hasLike->type_id;
-        }
-
 
         /* similar comics */
         $relatedComics = $comicService->getSimilar($comic, 6);

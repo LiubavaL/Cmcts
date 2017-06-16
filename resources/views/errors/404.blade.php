@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
-        <h1>Ошибка 404</h1>
-
-        <p>Такой страницы не существует.</p>
+    <div class="error404">
+        <div class="error404__number">404</div>
+        <div class="error404__omg">OMG! Looks like somebody stole this page.</div>
+        <svg class="error404__i-404"><use xlink:href="/images/icon.svg#icon_404"></use></svg>
     </div>
 @endsection
